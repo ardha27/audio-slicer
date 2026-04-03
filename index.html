@@ -142,7 +142,7 @@
       <div class="logo-icon">✂</div>
       <h1>Audio Slicer</h1>
     </div>
-    <div class="subtitle">RVC dataset preparation · slice · clean · export</div>
+    <div class="subtitle">RVC dataset preparation · optimized for ASMR voice</div>
   </header>
 
   <!-- Upload -->
@@ -178,9 +178,9 @@
     <div class="params-grid">
       <div class="param-group">
         <label>Threshold (dB)</label>
-        <input type="range" id="threshold" min="-60" max="-10" value="-40" step="1">
-        <div class="param-value" id="thresholdVal">-40 dB</div>
-        <div class="param-hint">Volume below this = silence. Lower catches quieter sounds.</div>
+        <input type="range" id="threshold" min="-60" max="-10" value="-50" step="1">
+        <div class="param-value" id="thresholdVal">-50 dB</div>
+        <div class="param-hint">Volume below this = silence. Lower for quiet/ASMR voice.</div>
       </div>
       <div class="param-group">
         <label>Min Slice Gap (ms)</label>
@@ -190,9 +190,9 @@
       </div>
       <div class="param-group">
         <label>Min Silence Interval (ms)</label>
-        <input type="range" id="minInterval" min="100" max="2000" value="500" step="50">
-        <div class="param-value" id="minIntervalVal">500 ms</div>
-        <div class="param-hint">Silence must last this long to trigger a cut.</div>
+        <input type="range" id="minInterval" min="100" max="2000" value="800" step="50">
+        <div class="param-value" id="minIntervalVal">800 ms</div>
+        <div class="param-hint">Silence must last this long to trigger a cut. Higher for ASMR pauses.</div>
       </div>
       <div class="param-group">
         <label>Min Duration (s)</label>
@@ -208,9 +208,9 @@
       </div>
       <div class="param-group">
         <label>Max Silence Kept (ms)</label>
-        <input type="range" id="maxSilKept" min="100" max="10000" value="500" step="100">
-        <div class="param-value" id="maxSilKeptVal">500 ms</div>
-        <div class="param-hint">Silence kept at chunk edges. Avoids hard cuts.</div>
+        <input type="range" id="maxSilKept" min="100" max="10000" value="1000" step="100">
+        <div class="param-value" id="maxSilKeptVal">1000 ms</div>
+        <div class="param-hint">Silence kept at chunk edges. Higher preserves natural ASMR pacing.</div>
       </div>
     </div>
 
@@ -258,27 +258,27 @@
     </div>
     <div id="hpFreqGroup" class="param-inline">
       <label>Cutoff</label>
-      <input type="range" id="hpFreq" min="40" max="200" value="80" step="5">
-      <div class="param-value" id="hpFreqVal">80 Hz</div>
+      <input type="range" id="hpFreq" min="40" max="200" value="50" step="5">
+      <div class="param-value" id="hpFreqVal">50 Hz</div>
     </div>
-    <div class="param-hint">Removes frequencies below cutoff. 80 Hz is safe for voice.</div>
+    <div class="param-hint">Removes frequencies below cutoff. 50 Hz preserves ASMR breath tones.</div>
 
     <div class="toggle-row">
       <div class="toggle-label">
         <span class="toggle-label-main">Noise Gate</span>
-        <span class="toggle-label-sub">silence background noise between words</span>
+        <span class="toggle-label-sub">⚠ can destroy quiet ASMR content — off by default</span>
       </div>
       <label class="toggle-switch">
-        <input type="checkbox" id="noiseGate" checked>
+        <input type="checkbox" id="noiseGate">
         <span class="toggle-track"></span>
       </label>
     </div>
-    <div id="ngThreshGroup" class="param-inline">
+    <div id="ngThreshGroup" class="param-inline" style="display:none">
       <label>Gate (dB)</label>
-      <input type="range" id="ngThresh" min="-60" max="-20" value="-45" step="1">
-      <div class="param-value" id="ngThreshVal">-45 dB</div>
+      <input type="range" id="ngThresh" min="-70" max="-20" value="-55" step="1">
+      <div class="param-value" id="ngThreshVal">-55 dB</div>
     </div>
-    <div class="param-hint">Audio below this level is silenced. Removes room tone & AC hum.</div>
+    <div class="param-hint">Silences audio below threshold. Use very low values (-55dB+) for ASMR if needed.</div>
 
     <div class="toggle-row">
       <div class="toggle-label">
@@ -303,10 +303,10 @@
     </div>
     <div id="targetLevelGroup" class="param-inline">
       <label>Peak</label>
-      <input type="range" id="targetLevel" min="-6" max="0" value="-1" step="0.5">
-      <div class="param-value" id="targetLevelVal">-1.0 dB</div>
+      <input type="range" id="targetLevel" min="-6" max="0" value="-0.5" step="0.5">
+      <div class="param-value" id="targetLevelVal">-0.5 dB</div>
     </div>
-    <div class="param-hint">Target peak. -1 dB avoids clipping while maximizing volume.</div>
+    <div class="param-hint">Target peak. -0.5 dB maximizes quiet ASMR volume for training.</div>
 
     <div class="toggle-row">
       <div class="toggle-label">
@@ -695,8 +695,8 @@ function trimSilence(buf, threshDb) {
   if (nCh > 1) for (let i = 0; i < len; i++) mono[i] /= nCh;
 
   let start = 0, end = len - 1;
-  // Pad: keep ~20ms before first sound and after last
-  const pad = Math.round(sr * 0.02);
+  // Pad: keep ~50ms before first sound and after last (more for ASMR)
+  const pad = Math.round(sr * 0.05);
   while (start < len && mono[start] < thresh) start++;
   while (end > start && mono[end] < thresh) end--;
   start = Math.max(0, start - pad);
@@ -801,7 +801,7 @@ sliceBtn.addEventListener('click', () => {
     // Trim edges
     if (trimEdgesToggle.checked) {
       setStatus('Trimming silence edges...');
-      raw = raw.map(c => trimSilence(c, +sliderParams.threshold.el.value));
+      raw = raw.map(c => trimSilence(c, -60));
       // Remove chunks that became near-empty after trim (<0.5s)
       raw = raw.filter(c => c.duration >= 0.5);
     }
