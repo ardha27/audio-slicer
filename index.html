@@ -802,6 +802,15 @@ sliceBtn.addEventListener('click', () => {
     if (trimEdgesToggle.checked) {
       setStatus('Trimming silence edges...');
       raw = raw.map(c => trimSilence(c, +sliderParams.threshold.el.value));
+      // Remove chunks that became near-empty after trim (<0.5s)
+      raw = raw.filter(c => c.duration >= 0.5);
+    }
+
+    // Second merge pass — trim/noise gate can shorten chunks below min duration
+    const md2 = +sliderParams.minDuration.el.value;
+    if (md2 > 0 && raw.length > 1) {
+      setStatus('Re-merging short chunks...');
+      raw = mergeShort(raw, md2);
     }
 
     // Normalize
