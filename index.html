@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Audio Slicer</title>
+<title>Audio Slicer — RVC Dataset Prep</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
   :root {
@@ -23,537 +23,115 @@
     --orange-soft: #ff910022;
     --red: #ff5252;
     --red-soft: #ff525222;
+    --yellow: #ffd600;
+    --yellow-soft: #ffd60022;
     --radius: 12px;
   }
-
   * { margin: 0; padding: 0; box-sizing: border-box; }
-
-  body {
-    background: var(--bg);
-    color: var(--text);
-    font-family: 'Outfit', sans-serif;
-    min-height: 100vh;
-    overflow-x: hidden;
-  }
-
-  .grain {
-    position: fixed; inset: 0; pointer-events: none; z-index: 999;
-    opacity: 0.03;
-    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
-  }
-
-  .app {
-    max-width: 900px;
-    margin: 0 auto;
-    padding: 40px 24px 80px;
-  }
-
-  header {
-    text-align: center;
-    margin-bottom: 48px;
-  }
-
-  .logo {
-    display: inline-flex;
-    align-items: center;
-    gap: 12px;
-    margin-bottom: 12px;
-  }
-
-  .logo-icon {
-    width: 40px; height: 40px;
-    background: var(--accent);
-    border-radius: 10px;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 18px;
-    box-shadow: 0 0 24px var(--accent-mid);
-  }
-
-  h1 {
-    font-size: 28px;
-    font-weight: 600;
-    letter-spacing: -0.5px;
-  }
-
-  .subtitle {
-    color: var(--text-dim);
-    font-size: 14px;
-    font-family: 'DM Mono', monospace;
-    margin-top: 4px;
-  }
-
-  .card {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: 24px;
-    margin-bottom: 20px;
-    transition: border-color 0.3s;
-  }
-
-  .card:hover {
-    border-color: var(--border-glow);
-  }
-
-  .card-title {
-    font-size: 13px;
-    font-family: 'DM Mono', monospace;
-    color: var(--text-dim);
-    text-transform: uppercase;
-    letter-spacing: 1.5px;
-    margin-bottom: 16px;
-  }
-
-  .dropzone {
-    border: 2px dashed var(--border);
-    border-radius: var(--radius);
-    padding: 48px 24px;
-    text-align: center;
-    cursor: pointer;
-    transition: all 0.3s;
-    position: relative;
-    overflow: hidden;
-  }
-
-  .dropzone::before {
-    content: '';
-    position: absolute; inset: 0;
-    background: radial-gradient(circle at center, var(--accent-soft), transparent 70%);
-    opacity: 0;
-    transition: opacity 0.3s;
-  }
-
-  .dropzone:hover, .dropzone.dragover {
-    border-color: var(--accent);
-  }
-
-  .dropzone:hover::before, .dropzone.dragover::before {
-    opacity: 1;
-  }
-
+  body { background: var(--bg); color: var(--text); font-family: 'Outfit', sans-serif; min-height: 100vh; overflow-x: hidden; }
+  .grain { position: fixed; inset: 0; pointer-events: none; z-index: 999; opacity: 0.03; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E"); }
+  .app { max-width: 920px; margin: 0 auto; padding: 40px 24px 80px; }
+  header { text-align: center; margin-bottom: 48px; }
+  .logo { display: inline-flex; align-items: center; gap: 12px; margin-bottom: 12px; }
+  .logo-icon { width: 40px; height: 40px; background: var(--accent); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 18px; box-shadow: 0 0 24px var(--accent-mid); }
+  h1 { font-size: 28px; font-weight: 600; letter-spacing: -0.5px; }
+  .subtitle { color: var(--text-dim); font-size: 14px; font-family: 'DM Mono', monospace; margin-top: 4px; }
+  .card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px; margin-bottom: 20px; transition: border-color 0.3s; }
+  .card:hover { border-color: var(--border-glow); }
+  .card-title { font-size: 13px; font-family: 'DM Mono', monospace; color: var(--text-dim); text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 16px; }
+  .dropzone { border: 2px dashed var(--border); border-radius: var(--radius); padding: 48px 24px; text-align: center; cursor: pointer; transition: all 0.3s; position: relative; overflow: hidden; }
+  .dropzone::before { content: ''; position: absolute; inset: 0; background: radial-gradient(circle at center, var(--accent-soft), transparent 70%); opacity: 0; transition: opacity 0.3s; }
+  .dropzone:hover, .dropzone.dragover { border-color: var(--accent); }
+  .dropzone:hover::before, .dropzone.dragover::before { opacity: 1; }
   .dropzone-icon { font-size: 36px; margin-bottom: 12px; display: block; }
   .dropzone-text { font-size: 15px; color: var(--text-dim); }
   .dropzone-text strong { color: var(--accent); cursor: pointer; }
-
-  .file-info {
-    display: flex;
-    align-items: center;
-    gap: 16px;
-    padding: 16px;
-    background: var(--surface2);
-    border-radius: 8px;
-    margin-top: 16px;
-  }
-
-  .file-icon {
-    width: 44px; height: 44px;
-    background: var(--accent-soft);
-    border-radius: 10px;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 20px;
-    flex-shrink: 0;
-  }
-
+  .file-info { display: flex; align-items: center; gap: 16px; padding: 16px; background: var(--surface2); border-radius: 8px; margin-top: 16px; }
+  .file-icon { width: 44px; height: 44px; background: var(--accent-soft); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 20px; flex-shrink: 0; }
   .file-details { flex: 1; min-width: 0; }
   .file-name { font-weight: 500; font-size: 14px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .file-meta { font-size: 12px; color: var(--text-dim); font-family: 'DM Mono', monospace; margin-top: 2px; }
-
-  .file-remove {
-    background: var(--red-soft);
-    border: none;
-    color: var(--red);
-    width: 32px; height: 32px;
-    border-radius: 8px;
-    cursor: pointer;
-    font-size: 16px;
-    display: flex; align-items: center; justify-content: center;
-    flex-shrink: 0;
-  }
-
-  .params-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-    gap: 16px;
-  }
-
-  .param-group label {
-    display: block;
-    font-size: 12px;
-    font-family: 'DM Mono', monospace;
-    color: var(--text-dim);
-    margin-bottom: 6px;
-  }
-
-  .param-group input[type="range"] {
-    width: 100%;
-    -webkit-appearance: none;
-    appearance: none;
-    height: 6px;
-    border-radius: 3px;
-    background: var(--surface2);
-    outline: none;
-  }
-
-  .param-group input[type="range"]::-webkit-slider-thumb {
-    -webkit-appearance: none;
-    width: 18px; height: 18px;
-    border-radius: 50%;
-    background: var(--accent);
-    cursor: pointer;
-    box-shadow: 0 0 10px var(--accent-mid);
-  }
-
-  .param-value {
-    font-size: 13px;
-    font-family: 'DM Mono', monospace;
-    color: var(--text);
-    text-align: right;
-    margin-top: 4px;
-  }
-
-  .param-hint {
-    font-size: 11px;
-    color: var(--text-dim);
-    margin-top: 6px;
-    line-height: 1.4;
-    opacity: 0.7;
-  }
-
-  .toggle-row {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 12px 0;
-    border-top: 1px solid var(--border);
-    margin-top: 16px;
-  }
-
+  .file-remove { background: var(--red-soft); border: none; color: var(--red); width: 32px; height: 32px; border-radius: 8px; cursor: pointer; font-size: 16px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .params-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 16px; }
+  .param-group label { display: block; font-size: 12px; font-family: 'DM Mono', monospace; color: var(--text-dim); margin-bottom: 6px; }
+  .param-group input[type="range"] { width: 100%; -webkit-appearance: none; appearance: none; height: 6px; border-radius: 3px; background: var(--surface2); outline: none; }
+  .param-group input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; width: 18px; height: 18px; border-radius: 50%; background: var(--accent); cursor: pointer; box-shadow: 0 0 10px var(--accent-mid); }
+  .param-value { font-size: 13px; font-family: 'DM Mono', monospace; color: var(--text); text-align: right; margin-top: 4px; }
+  .param-hint { font-size: 11px; color: var(--text-dim); margin-top: 6px; line-height: 1.4; opacity: 0.7; }
+  .toggle-row { display: flex; align-items: center; justify-content: space-between; padding: 12px 0; border-top: 1px solid var(--border); margin-top: 16px; }
+  .toggle-row:first-of-type { margin-top: 20px; }
   .toggle-label { display: flex; flex-direction: column; gap: 2px; }
   .toggle-label-main { font-size: 14px; font-weight: 500; }
   .toggle-label-sub { font-size: 12px; font-family: 'DM Mono', monospace; color: var(--text-dim); }
-
-  .toggle-switch {
-    position: relative;
-    width: 48px; height: 26px;
-    cursor: pointer;
-    flex-shrink: 0;
-  }
-
+  .toggle-switch { position: relative; width: 48px; height: 26px; cursor: pointer; flex-shrink: 0; }
   .toggle-switch input { opacity: 0; width: 0; height: 0; }
-
-  .toggle-track {
-    position: absolute; inset: 0;
-    background: var(--surface2);
-    border: 1px solid var(--border);
-    border-radius: 13px;
-    transition: all 0.3s;
-  }
-
-  .toggle-track::after {
-    content: '';
-    position: absolute;
-    top: 3px; left: 3px;
-    width: 18px; height: 18px;
-    border-radius: 50%;
-    background: var(--text-dim);
-    transition: all 0.3s;
-  }
-
-  .toggle-switch input:checked + .toggle-track {
-    background: var(--accent);
-    border-color: var(--accent);
-  }
-
-  .toggle-switch input:checked + .toggle-track::after {
-    transform: translateX(22px);
-    background: white;
-  }
-
-  .waveform-container {
-    position: relative;
-    height: 160px;
-    background: var(--surface2);
-    border-radius: 8px;
-    overflow: hidden;
-  }
-
+  .toggle-track { position: absolute; inset: 0; background: var(--surface2); border: 1px solid var(--border); border-radius: 13px; transition: all 0.3s; }
+  .toggle-track::after { content: ''; position: absolute; top: 3px; left: 3px; width: 18px; height: 18px; border-radius: 50%; background: var(--text-dim); transition: all 0.3s; }
+  .toggle-switch input:checked + .toggle-track { background: var(--accent); border-color: var(--accent); }
+  .toggle-switch input:checked + .toggle-track::after { transform: translateX(22px); background: white; }
+  .waveform-container { position: relative; height: 160px; background: var(--surface2); border-radius: 8px; overflow: hidden; }
   #waveformCanvas { width: 100%; height: 100%; display: block; }
-
-  .waveform-placeholder {
-    position: absolute; inset: 0;
-    display: flex; align-items: center; justify-content: center;
-    color: var(--text-dim);
-    font-family: 'DM Mono', monospace;
-    font-size: 13px;
-  }
-
-  .btn {
-    display: inline-flex; align-items: center; gap: 8px;
-    padding: 12px 24px;
-    border-radius: 8px;
-    font-family: 'Outfit', sans-serif;
-    font-size: 14px;
-    font-weight: 500;
-    cursor: pointer;
-    border: none;
-    transition: all 0.2s;
-  }
-
-  .btn-primary {
-    background: var(--accent);
-    color: white;
-    box-shadow: 0 0 20px var(--accent-mid);
-  }
-
-  .btn-primary:hover:not(:disabled) {
-    box-shadow: 0 0 32px var(--accent-mid);
-    transform: translateY(-1px);
-  }
-
+  .waveform-placeholder { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; color: var(--text-dim); font-family: 'DM Mono', monospace; font-size: 13px; }
+  .btn { display: inline-flex; align-items: center; gap: 8px; padding: 12px 24px; border-radius: 8px; font-family: 'Outfit', sans-serif; font-size: 14px; font-weight: 500; cursor: pointer; border: none; transition: all 0.2s; }
+  .btn-primary { background: var(--accent); color: white; box-shadow: 0 0 20px var(--accent-mid); }
+  .btn-primary:hover:not(:disabled) { box-shadow: 0 0 32px var(--accent-mid); transform: translateY(-1px); }
   .btn-primary:disabled { opacity: 0.4; cursor: not-allowed; }
-
-  .btn-secondary {
-    background: var(--surface2);
-    color: var(--text);
-    border: 1px solid var(--border);
-  }
-
+  .btn-secondary { background: var(--surface2); color: var(--text); border: 1px solid var(--border); }
   .btn-secondary:hover { border-color: var(--accent); }
-
-  .actions {
-    display: flex;
-    gap: 12px;
-    margin-top: 20px;
-    flex-wrap: wrap;
-  }
-
-  .chunks-list {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-  }
-
-  .chunk-item {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    padding: 12px 16px;
-    background: var(--surface2);
-    border-radius: 8px;
-    border: 1px solid transparent;
-    transition: all 0.2s;
-  }
-
+  .actions { display: flex; gap: 12px; margin-top: 20px; flex-wrap: wrap; }
+  .chunks-list { display: flex; flex-direction: column; gap: 8px; }
+  .chunk-item { display: flex; align-items: center; gap: 12px; padding: 12px 16px; background: var(--surface2); border-radius: 8px; border: 1px solid transparent; transition: all 0.2s; }
   .chunk-item:hover { background: var(--border); }
-
-  .chunk-item.selected {
-    border-color: var(--red);
-    background: var(--red-soft);
-  }
-
+  .chunk-item.selected { border-color: var(--red); background: var(--red-soft); }
   .chunk-item.selected .chunk-num { color: var(--red); }
-
-  .chunk-check {
-    width: 20px; height: 20px;
-    border: 2px solid var(--border);
-    border-radius: 4px;
-    cursor: pointer;
-    display: flex; align-items: center; justify-content: center;
-    flex-shrink: 0;
-    transition: all 0.2s;
-    font-size: 12px;
-    color: transparent;
-    background: transparent;
-  }
-
-  .chunk-item.selected .chunk-check {
-    border-color: var(--red);
-    background: var(--red);
-    color: white;
-  }
-
-  .chunk-num {
-    font-family: 'DM Mono', monospace;
-    font-size: 12px;
-    color: var(--text-dim);
-    min-width: 32px;
-  }
-
-  .chunk-bar {
-    flex: 1;
-    height: 32px;
-    background: var(--accent-soft);
-    border-radius: 4px;
-    overflow: hidden;
-  }
-
+  .chunk-check { width: 20px; height: 20px; border: 2px solid var(--border); border-radius: 4px; cursor: pointer; display: flex; align-items: center; justify-content: center; flex-shrink: 0; transition: all 0.2s; font-size: 12px; color: transparent; background: transparent; }
+  .chunk-item.selected .chunk-check { border-color: var(--red); background: var(--red); color: white; }
+  .chunk-num { font-family: 'DM Mono', monospace; font-size: 12px; color: var(--text-dim); min-width: 32px; }
+  .chunk-bar { flex: 1; height: 32px; background: var(--accent-soft); border-radius: 4px; overflow: hidden; }
   .chunk-bar canvas { width: 100%; height: 100%; display: block; }
-
-  .chunk-dur {
-    font-family: 'DM Mono', monospace;
-    font-size: 12px;
-    color: var(--text-dim);
-    min-width: 50px;
-    text-align: right;
-  }
-
-  .chunk-badge {
-    font-family: 'DM Mono', monospace;
-    font-size: 10px;
-    padding: 2px 6px;
-    border-radius: 4px;
-    background: var(--green-soft);
-    color: var(--green);
-    flex-shrink: 0;
-  }
-
-  .chunk-play, .chunk-dl {
-    background: none;
-    border: 1px solid var(--border);
-    color: var(--text);
-    width: 32px; height: 32px;
-    border-radius: 6px;
-    cursor: pointer;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 14px;
-    transition: all 0.2s;
-    flex-shrink: 0;
-  }
-
+  .chunk-dur { font-family: 'DM Mono', monospace; font-size: 12px; color: var(--text-dim); min-width: 50px; text-align: right; }
+  .chunk-badge { font-family: 'DM Mono', monospace; font-size: 10px; padding: 2px 6px; border-radius: 4px; flex-shrink: 0; }
+  .badge-ok { background: var(--green-soft); color: var(--green); }
+  .badge-clip { background: var(--red-soft); color: var(--red); }
+  .badge-quiet { background: var(--yellow-soft); color: var(--yellow); }
+  .chunk-play, .chunk-dl { background: none; border: 1px solid var(--border); color: var(--text); width: 32px; height: 32px; border-radius: 6px; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 14px; transition: all 0.2s; flex-shrink: 0; }
   .chunk-play:hover { border-color: var(--green); color: var(--green); }
   .chunk-dl:hover { border-color: var(--accent); color: var(--accent); }
-
-  .chunk-play.playing {
-    border-color: var(--orange);
-    color: var(--orange);
-    background: var(--orange-soft);
-  }
-
-  .stats-bar {
-    display: flex;
-    gap: 24px;
-    flex-wrap: wrap;
-    margin-bottom: 16px;
-  }
-
+  .chunk-play.playing { border-color: var(--orange); color: var(--orange); background: var(--orange-soft); }
+  .stats-bar { display: flex; gap: 24px; flex-wrap: wrap; margin-bottom: 16px; }
   .stat { display: flex; flex-direction: column; gap: 2px; }
-
-  .stat-label {
-    font-size: 11px;
-    font-family: 'DM Mono', monospace;
-    color: var(--text-dim);
-    text-transform: uppercase;
-    letter-spacing: 1px;
-  }
-
+  .stat-label { font-size: 11px; font-family: 'DM Mono', monospace; color: var(--text-dim); text-transform: uppercase; letter-spacing: 1px; }
   .stat-value { font-size: 18px; font-weight: 600; }
   .stat-value.accent { color: var(--accent); }
   .stat-value.green { color: var(--green); }
-
-  .selection-toolbar {
-    display: none;
-    align-items: center;
-    justify-content: space-between;
-    padding: 12px 16px;
-    background: var(--red-soft);
-    border: 1px solid var(--red);
-    border-radius: 8px;
-    margin-bottom: 12px;
-    animation: slideDown 0.2s ease;
-  }
-
-  @keyframes slideDown {
-    from { opacity: 0; transform: translateY(-8px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
-
+  .selection-toolbar { display: none; align-items: center; justify-content: space-between; padding: 12px 16px; background: var(--red-soft); border: 1px solid var(--red); border-radius: 8px; margin-bottom: 12px; animation: slideDown 0.2s ease; }
+  @keyframes slideDown { from { opacity: 0; transform: translateY(-8px); } to { opacity: 1; transform: translateY(0); } }
   .selection-toolbar.active { display: flex; }
-
-  .selection-info {
-    font-size: 13px;
-    font-family: 'DM Mono', monospace;
-    color: var(--red);
-  }
-
+  .selection-info { font-size: 13px; font-family: 'DM Mono', monospace; color: var(--red); }
   .selection-actions { display: flex; gap: 8px; }
-
-  .sel-btn {
-    padding: 6px 14px;
-    border-radius: 6px;
-    font-family: 'Outfit', sans-serif;
-    font-size: 13px;
-    font-weight: 500;
-    cursor: pointer;
-    border: none;
-    transition: all 0.2s;
-  }
-
-  .sel-btn-cancel {
-    background: transparent;
-    color: var(--text-dim);
-    border: 1px solid var(--border);
-  }
-
+  .sel-btn { padding: 6px 14px; border-radius: 6px; font-family: 'Outfit', sans-serif; font-size: 13px; font-weight: 500; cursor: pointer; border: none; transition: all 0.2s; }
+  .sel-btn-cancel { background: transparent; color: var(--text-dim); border: 1px solid var(--border); }
   .sel-btn-cancel:hover { border-color: var(--text-dim); }
-
   .sel-btn-delete { background: var(--red); color: white; }
   .sel-btn-delete:hover { opacity: 0.85; }
-
-  .sel-btn-all {
-    background: transparent;
-    color: var(--red);
-    border: 1px solid var(--red);
-  }
-
+  .sel-btn-all { background: transparent; color: var(--red); border: 1px solid var(--red); }
   .sel-btn-all:hover { background: var(--red-soft); }
-
-  .processing {
-    display: none;
-    align-items: center;
-    justify-content: center;
-    flex-direction: column;
-    gap: 16px;
-    padding: 48px;
-  }
-
+  .processing { display: none; align-items: center; justify-content: center; flex-direction: column; gap: 16px; padding: 48px; }
   .processing.active { display: flex; }
-
-  .spinner {
-    width: 32px; height: 32px;
-    border: 3px solid var(--surface2);
-    border-top-color: var(--accent);
-    border-radius: 50%;
-    animation: spin 0.8s linear infinite;
-  }
-
+  .spinner { width: 32px; height: 32px; border: 3px solid var(--surface2); border-top-color: var(--accent); border-radius: 50%; animation: spin 0.8s linear infinite; }
   @keyframes spin { to { transform: rotate(360deg); } }
-
-  .processing-text {
-    font-family: 'DM Mono', monospace;
-    font-size: 13px;
-    color: var(--text-dim);
-  }
-
+  .processing-text { font-family: 'DM Mono', monospace; font-size: 13px; color: var(--text-dim); }
   .download-all { margin-top: 16px; }
-
   .hidden { display: none !important; }
-
-  .empty-msg {
-    text-align: center;
-    padding: 32px;
-    color: var(--text-dim);
-    font-family: 'DM Mono', monospace;
-    font-size: 13px;
-  }
-
-  @media (max-width: 600px) {
-    .params-grid { grid-template-columns: 1fr; }
-    .app { padding: 24px 16px 60px; }
-    h1 { font-size: 22px; }
-    .chunk-bar { display: none; }
-    .chunk-badge { display: none; }
-    .selection-toolbar { flex-direction: column; gap: 10px; text-align: center; }
-  }
+  .empty-msg { text-align: center; padding: 32px; color: var(--text-dim); font-family: 'DM Mono', monospace; font-size: 13px; }
+  .section-divider { font-size: 12px; font-family: 'DM Mono', monospace; color: var(--accent); text-transform: uppercase; letter-spacing: 1.5px; margin-top: 20px; margin-bottom: 8px; padding-top: 16px; border-top: 1px solid var(--border); }
+  .param-inline { display: flex; align-items: center; gap: 12px; margin-top: 8px; }
+  .param-inline label { margin-bottom: 0; white-space: nowrap; }
+  .param-inline input[type="range"] { flex: 1; }
+  .param-inline .param-value { min-width: 60px; margin-top: 0; }
+  select.param-select { background: var(--surface2); color: var(--text); border: 1px solid var(--border); border-radius: 6px; padding: 8px 12px; font-family: 'DM Mono', monospace; font-size: 13px; outline: none; cursor: pointer; }
+  select.param-select:focus { border-color: var(--accent); }
+  @media (max-width: 600px) { .params-grid { grid-template-columns: 1fr; } .app { padding: 24px 16px 60px; } h1 { font-size: 22px; } .chunk-bar { display: none; } .chunk-badge { display: none; } .selection-toolbar { flex-direction: column; gap: 10px; text-align: center; } }
 </style>
 </head>
 <body>
@@ -564,9 +142,10 @@
       <div class="logo-icon">✂</div>
       <h1>Audio Slicer</h1>
     </div>
-    <div class="subtitle">silence-based audio splitting · stereo balanced</div>
+    <div class="subtitle">RVC dataset preparation · slice · clean · export</div>
   </header>
 
+  <!-- Upload -->
   <div class="card">
     <div class="card-title">Input Audio</div>
     <div class="dropzone" id="dropzone">
@@ -584,6 +163,7 @@
     </div>
   </div>
 
+  <!-- Waveform -->
   <div class="card">
     <div class="card-title">Waveform</div>
     <div class="waveform-container">
@@ -592,6 +172,7 @@
     </div>
   </div>
 
+  <!-- Parameters -->
   <div class="card">
     <div class="card-title">Slicer Parameters</div>
     <div class="params-grid">
@@ -605,41 +186,107 @@
         <label>Min Slice Gap (ms)</label>
         <input type="range" id="minLength" min="1000" max="15000" value="5000" step="100">
         <div class="param-value" id="minLengthVal">5000 ms</div>
-        <div class="param-hint">Minimum distance between two cut points. Prevents cutting too often.</div>
+        <div class="param-hint">Minimum distance between two cut points.</div>
       </div>
       <div class="param-group">
         <label>Min Silence Interval (ms)</label>
         <input type="range" id="minInterval" min="100" max="2000" value="500" step="50">
         <div class="param-value" id="minIntervalVal">500 ms</div>
-        <div class="param-hint">Silence must last this long to trigger a cut. Short pauses are ignored.</div>
+        <div class="param-hint">Silence must last this long to trigger a cut.</div>
       </div>
       <div class="param-group">
         <label>Min Duration (s)</label>
         <input type="range" id="minDuration" min="0" max="30" value="10" step="1">
         <div class="param-value" id="minDurationVal">10 s</div>
-        <div class="param-hint">Chunks shorter than this get merged with a neighbor. Set 0 to disable.</div>
+        <div class="param-hint">Chunks shorter than this get merged. 0 = disabled.</div>
       </div>
       <div class="param-group">
         <label>Hop Size (ms)</label>
         <input type="range" id="hopSize" min="5" max="50" value="10" step="1">
         <div class="param-value" id="hopSizeVal">10 ms</div>
-        <div class="param-hint">Analysis step size. Smaller = more precise detection, slower processing.</div>
+        <div class="param-hint">Analysis step. Smaller = more precise, slower.</div>
       </div>
       <div class="param-group">
         <label>Max Silence Kept (ms)</label>
         <input type="range" id="maxSilKept" min="100" max="10000" value="500" step="100">
         <div class="param-value" id="maxSilKeptVal">500 ms</div>
-        <div class="param-hint">How much silence to keep at chunk edges. Avoids hard cuts on words.</div>
+        <div class="param-hint">Silence kept at chunk edges. Avoids hard cuts.</div>
+      </div>
+    </div>
+
+    <!-- RVC Processing Section -->
+    <div class="section-divider">RVC Processing</div>
+
+    <div class="toggle-row" style="margin-top:0; border-top:none;">
+      <div class="toggle-label">
+        <span class="toggle-label-main">Mono Output</span>
+        <span class="toggle-label-sub">RVC expects single-channel audio</span>
+      </div>
+      <label class="toggle-switch">
+        <input type="checkbox" id="monoOutput" checked>
+        <span class="toggle-track"></span>
+      </label>
+    </div>
+
+    <div class="toggle-row">
+      <div class="toggle-label">
+        <span class="toggle-label-main">Resample</span>
+        <span class="toggle-label-sub">convert to target sample rate for training</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:10px;">
+        <select class="param-select" id="targetSR">
+          <option value="0">Off</option>
+          <option value="16000">16000 Hz</option>
+          <option value="22050">22050 Hz</option>
+          <option value="32000">32000 Hz</option>
+          <option value="40000" selected>40000 Hz</option>
+          <option value="44100">44100 Hz</option>
+          <option value="48000">48000 Hz</option>
+        </select>
       </div>
     </div>
 
     <div class="toggle-row">
       <div class="toggle-label">
-        <span class="toggle-label-main">Stereo Voice Balance</span>
-        <span class="toggle-label-sub">center voice equally on L+R channels</span>
+        <span class="toggle-label-main">High-Pass Filter</span>
+        <span class="toggle-label-sub">remove low rumble, hum & handling noise</span>
       </div>
       <label class="toggle-switch">
-        <input type="checkbox" id="stereoBalance" checked>
+        <input type="checkbox" id="highPass" checked>
+        <span class="toggle-track"></span>
+      </label>
+    </div>
+    <div id="hpFreqGroup" class="param-inline">
+      <label>Cutoff</label>
+      <input type="range" id="hpFreq" min="40" max="200" value="80" step="5">
+      <div class="param-value" id="hpFreqVal">80 Hz</div>
+    </div>
+    <div class="param-hint">Removes frequencies below cutoff. 80 Hz is safe for voice.</div>
+
+    <div class="toggle-row">
+      <div class="toggle-label">
+        <span class="toggle-label-main">Noise Gate</span>
+        <span class="toggle-label-sub">silence background noise between words</span>
+      </div>
+      <label class="toggle-switch">
+        <input type="checkbox" id="noiseGate" checked>
+        <span class="toggle-track"></span>
+      </label>
+    </div>
+    <div id="ngThreshGroup" class="param-inline">
+      <label>Gate (dB)</label>
+      <input type="range" id="ngThresh" min="-60" max="-20" value="-45" step="1">
+      <div class="param-value" id="ngThreshVal">-45 dB</div>
+    </div>
+    <div class="param-hint">Audio below this level is silenced. Removes room tone & AC hum.</div>
+
+    <div class="toggle-row">
+      <div class="toggle-label">
+        <span class="toggle-label-main">Trim Edges</span>
+        <span class="toggle-label-sub">cut leading & trailing silence from each chunk</span>
+      </div>
+      <label class="toggle-switch">
+        <input type="checkbox" id="trimEdges" checked>
         <span class="toggle-track"></span>
       </label>
     </div>
@@ -654,30 +301,41 @@
         <span class="toggle-track"></span>
       </label>
     </div>
-
-    <div id="targetLevelGroup" class="param-group" style="margin-top:12px">
-      <label>Target Peak (dB)</label>
+    <div id="targetLevelGroup" class="param-inline">
+      <label>Peak</label>
       <input type="range" id="targetLevel" min="-6" max="0" value="-1" step="0.5">
       <div class="param-value" id="targetLevelVal">-1.0 dB</div>
-      <div class="param-hint">Peak volume target. -1 dB avoids clipping. 0 dB = maximum possible.</div>
+    </div>
+    <div class="param-hint">Target peak. -1 dB avoids clipping while maximizing volume.</div>
+
+    <div class="toggle-row">
+      <div class="toggle-label">
+        <span class="toggle-label-main">Flag Clipped Chunks</span>
+        <span class="toggle-label-sub">detect and mark chunks with clipping artifacts</span>
+      </div>
+      <label class="toggle-switch">
+        <input type="checkbox" id="detectClip" checked>
+        <span class="toggle-track"></span>
+      </label>
     </div>
 
     <div class="actions">
-      <button class="btn btn-primary" id="sliceBtn" disabled>✂ Slice Audio</button>
+      <button class="btn btn-primary" id="sliceBtn" disabled>✂ Slice & Process</button>
     </div>
   </div>
 
+  <!-- Processing -->
   <div class="card hidden" id="processingCard">
     <div class="processing active">
       <div class="spinner"></div>
-      <div class="processing-text">Analyzing silence regions...</div>
+      <div class="processing-text" id="processingText">Analyzing silence regions...</div>
     </div>
   </div>
 
+  <!-- Results -->
   <div class="card hidden" id="resultsCard">
     <div class="card-title">Results</div>
     <div class="stats-bar" id="statsBar"></div>
-
     <div class="selection-toolbar" id="selectionToolbar">
       <span class="selection-info" id="selectionInfo">0 selected</span>
       <div class="selection-actions">
@@ -686,7 +344,6 @@
         <button class="sel-btn sel-btn-delete" id="deleteSelectedBtn">🗑 Delete</button>
       </div>
     </div>
-
     <div class="chunks-list" id="chunksList"></div>
     <div class="actions download-all">
       <button class="btn btn-primary" id="downloadZipBtn">⬇ Download All (.zip)</button>
@@ -700,102 +357,84 @@
 let audioBuffer = null;
 let audioCtx = null;
 let chunks = [];
+let chunkFlags = []; // 'ok' | 'clip' | 'quiet'
 let selectedChunks = new Set();
 let playingSource = null;
 let playingIdx = -1;
 
-// ── DOM ──
 const $ = id => document.getElementById(id);
-const dropzone = $('dropzone');
-const fileInput = $('fileInput');
-const fileInfo = $('fileInfo');
-const fileName = $('fileName');
-const fileMeta = $('fileMeta');
-const fileRemove = $('fileRemove');
-const sliceBtn = $('sliceBtn');
-const processingCard = $('processingCard');
-const resultsCard = $('resultsCard');
-const chunksList = $('chunksList');
-const statsBar = $('statsBar');
-const waveformCanvas = $('waveformCanvas');
-const waveformPlaceholder = $('waveformPlaceholder');
+
+// ── DOM ──
+const dropzone = $('dropzone'), fileInput = $('fileInput'), fileInfo = $('fileInfo');
+const fileName = $('fileName'), fileMeta = $('fileMeta'), fileRemove = $('fileRemove');
+const sliceBtn = $('sliceBtn'), processingCard = $('processingCard'), processingText = $('processingText');
+const resultsCard = $('resultsCard'), chunksList = $('chunksList'), statsBar = $('statsBar');
+const waveformCanvas = $('waveformCanvas'), waveformPlaceholder = $('waveformPlaceholder');
 const downloadZipBtn = $('downloadZipBtn');
-const stereoBalanceToggle = $('stereoBalance');
+const selectionToolbar = $('selectionToolbar'), selectionInfo = $('selectionInfo');
+const selectAllBtn = $('selectAllBtn'), deselectBtn = $('deselectBtn'), deleteSelectedBtn = $('deleteSelectedBtn');
+
+// Toggles
+const monoToggle = $('monoOutput');
+const highPassToggle = $('highPass');
+const noiseGateToggle = $('noiseGate');
+const trimEdgesToggle = $('trimEdges');
 const normalizeToggle = $('normalize');
-const targetLevelSlider = $('targetLevel');
-const targetLevelGroup = $('targetLevelGroup');
+const detectClipToggle = $('detectClip');
 
-// Show/hide target level based on normalize toggle
-normalizeToggle.addEventListener('change', () => {
-  targetLevelGroup.style.display = normalizeToggle.checked ? '' : 'none';
-});
-
-targetLevelSlider.addEventListener('input', () => {
-  $('targetLevelVal').textContent = parseFloat(targetLevelSlider.value).toFixed(1) + ' dB';
-});
-const selectionToolbar = $('selectionToolbar');
-const selectionInfo = $('selectionInfo');
-const selectAllBtn = $('selectAllBtn');
-const deselectBtn = $('deselectBtn');
-const deleteSelectedBtn = $('deleteSelectedBtn');
-
-const params = {
-  threshold: $('threshold'),
-  minLength: $('minLength'),
-  minInterval: $('minInterval'),
-  minDuration: $('minDuration'),
-  hopSize: $('hopSize'),
-  maxSilKept: $('maxSilKept'),
+// Slider params
+const sliderParams = {
+  threshold: { el: $('threshold'), unit: ' dB' },
+  minLength: { el: $('minLength'), unit: ' ms' },
+  minInterval: { el: $('minInterval'), unit: ' ms' },
+  minDuration: { el: $('minDuration'), unit: ' s' },
+  hopSize: { el: $('hopSize'), unit: ' ms' },
+  maxSilKept: { el: $('maxSilKept'), unit: ' ms' },
+  hpFreq: { el: $('hpFreq'), unit: ' Hz' },
+  ngThresh: { el: $('ngThresh'), unit: ' dB' },
+  targetLevel: { el: $('targetLevel'), unit: ' dB', fmt: v => parseFloat(v).toFixed(1) },
 };
 
-Object.entries(params).forEach(([key, el]) => {
+Object.entries(sliderParams).forEach(([key, cfg]) => {
   const valEl = $(key + 'Val');
-  el.addEventListener('input', () => {
-    const unit = key === 'threshold' ? ' dB' : key === 'minDuration' ? ' s' : ' ms';
-    valEl.textContent = el.value + unit;
+  cfg.el.addEventListener('input', () => {
+    valEl.textContent = (cfg.fmt ? cfg.fmt(cfg.el.value) : cfg.el.value) + cfg.unit;
   });
 });
+
+// Show/hide sub-params
+highPassToggle.addEventListener('change', () => { $('hpFreqGroup').style.display = highPassToggle.checked ? '' : 'none'; });
+noiseGateToggle.addEventListener('change', () => { $('ngThreshGroup').style.display = noiseGateToggle.checked ? '' : 'none'; });
+normalizeToggle.addEventListener('change', () => { $('targetLevelGroup').style.display = normalizeToggle.checked ? '' : 'none'; });
 
 // ── File handling ──
 dropzone.addEventListener('click', () => fileInput.click());
 dropzone.addEventListener('dragover', e => { e.preventDefault(); dropzone.classList.add('dragover'); });
 dropzone.addEventListener('dragleave', () => dropzone.classList.remove('dragover'));
-dropzone.addEventListener('drop', e => {
-  e.preventDefault();
-  dropzone.classList.remove('dragover');
-  if (e.dataTransfer.files.length) loadFile(e.dataTransfer.files[0]);
-});
+dropzone.addEventListener('drop', e => { e.preventDefault(); dropzone.classList.remove('dragover'); if (e.dataTransfer.files.length) loadFile(e.dataTransfer.files[0]); });
 fileInput.addEventListener('change', () => { if (fileInput.files.length) loadFile(fileInput.files[0]); });
 fileRemove.addEventListener('click', resetFile);
 
 async function loadFile(file) {
   if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
   try {
-    const arrayBuf = await file.arrayBuffer();
-    audioBuffer = await audioCtx.decodeAudioData(arrayBuf);
+    const ab = await file.arrayBuffer();
+    audioBuffer = await audioCtx.decodeAudioData(ab);
     fileName.textContent = file.name;
-    fileMeta.textContent = `${audioBuffer.numberOfChannels}ch · ${audioBuffer.sampleRate}Hz · ${formatTime(audioBuffer.duration)}`;
+    fileMeta.textContent = `${audioBuffer.numberOfChannels}ch · ${audioBuffer.sampleRate}Hz · ${fmtTime(audioBuffer.duration)}`;
     dropzone.classList.add('hidden');
     fileInfo.classList.remove('hidden');
     sliceBtn.disabled = false;
     resultsCard.classList.add('hidden');
-    chunks = [];
-    selectedChunks.clear();
+    chunks = []; chunkFlags = []; selectedChunks.clear();
     drawWaveform();
-  } catch (err) {
-    alert('Could not decode audio: ' + err.message);
-  }
+  } catch (err) { alert('Could not decode audio: ' + err.message); }
 }
 
 function resetFile() {
-  audioBuffer = null;
-  chunks = [];
-  selectedChunks.clear();
-  fileInput.value = '';
-  dropzone.classList.remove('hidden');
-  fileInfo.classList.add('hidden');
-  sliceBtn.disabled = true;
-  resultsCard.classList.add('hidden');
+  audioBuffer = null; chunks = []; chunkFlags = []; selectedChunks.clear(); fileInput.value = '';
+  dropzone.classList.remove('hidden'); fileInfo.classList.add('hidden');
+  sliceBtn.disabled = true; resultsCard.classList.add('hidden');
   waveformPlaceholder.classList.remove('hidden');
   waveformCanvas.getContext('2d').clearRect(0, 0, waveformCanvas.width, waveformCanvas.height);
 }
@@ -804,253 +443,310 @@ function resetFile() {
 function drawWaveform() {
   if (!audioBuffer) return;
   waveformPlaceholder.classList.add('hidden');
-  const canvas = waveformCanvas;
-  const dpr = window.devicePixelRatio || 1;
-  const rect = canvas.getBoundingClientRect();
-  canvas.width = rect.width * dpr;
-  canvas.height = rect.height * dpr;
-  const ctx = canvas.getContext('2d');
-  ctx.scale(dpr, dpr);
-  const w = rect.width, h = rect.height;
-  const data = audioBuffer.getChannelData(0);
-  const step = Math.ceil(data.length / w);
+  const c = waveformCanvas, dpr = devicePixelRatio || 1, r = c.getBoundingClientRect();
+  c.width = r.width * dpr; c.height = r.height * dpr;
+  const ctx = c.getContext('2d'); ctx.scale(dpr, dpr);
+  const w = r.width, h = r.height, data = audioBuffer.getChannelData(0), step = Math.ceil(data.length / w);
   ctx.clearRect(0, 0, w, h);
-  const grad = ctx.createLinearGradient(0, 0, w, 0);
-  grad.addColorStop(0, '#3d5afe');
-  grad.addColorStop(0.5, '#7c4dff');
-  grad.addColorStop(1, '#3d5afe');
-  ctx.fillStyle = grad;
+  const g = ctx.createLinearGradient(0, 0, w, 0);
+  g.addColorStop(0, '#3d5afe'); g.addColorStop(0.5, '#7c4dff'); g.addColorStop(1, '#3d5afe');
+  ctx.fillStyle = g;
   for (let i = 0; i < w; i++) {
     let mn = 1, mx = -1;
-    for (let j = 0; j < step; j++) {
-      const d = data[i * step + j] || 0;
-      if (d < mn) mn = d;
-      if (d > mx) mx = d;
-    }
+    for (let j = 0; j < step; j++) { const d = data[i * step + j] || 0; if (d < mn) mn = d; if (d > mx) mx = d; }
     ctx.fillRect(i, (1 - mx) * h / 2, 1, ((1 - mn) - (1 - mx)) * h / 2);
   }
 }
 window.addEventListener('resize', drawWaveform);
 
+// ══════════════════════════════════════
+// AUDIO PROCESSING FUNCTIONS
+// ══════════════════════════════════════
+
 // ── RMS ──
 function getRMS(samples, frameLength, hopLength) {
-  const padSize = Math.floor(frameLength / 2);
-  const padded = new Float32Array(samples.length + padSize * 2);
-  padded.set(samples, padSize);
-  const numFrames = Math.ceil((padded.length - frameLength) / hopLength) + 1;
-  const rms = new Float32Array(numFrames);
-  for (let i = 0; i < numFrames; i++) {
-    const start = i * hopLength;
-    let sum = 0;
-    const end = Math.min(start + frameLength, padded.length);
-    const len = end - start;
-    for (let j = start; j < end; j++) sum += padded[j] * padded[j];
+  const ps = Math.floor(frameLength / 2);
+  const padded = new Float32Array(samples.length + ps * 2);
+  padded.set(samples, ps);
+  const nf = Math.ceil((padded.length - frameLength) / hopLength) + 1;
+  const rms = new Float32Array(nf);
+  for (let i = 0; i < nf; i++) {
+    const s = i * hopLength; let sum = 0;
+    const e = Math.min(s + frameLength, padded.length), len = e - s;
+    for (let j = s; j < e; j++) sum += padded[j] * padded[j];
     rms[i] = Math.sqrt(sum / len);
   }
   return rms;
 }
 
-// ── Slicer ──
-function sliceAudio(buffer, thresholdDb, minLengthMs, minIntervalMs, hopSizeMs, maxSilKeptMs) {
-  const sr = buffer.sampleRate;
-  const numChannels = buffer.numberOfChannels;
-  let samples;
-  if (numChannels > 1) {
-    samples = new Float32Array(buffer.length);
-    for (let ch = 0; ch < numChannels; ch++) {
-      const chData = buffer.getChannelData(ch);
-      for (let i = 0; i < buffer.length; i++) samples[i] += chData[i];
-    }
-    for (let i = 0; i < buffer.length; i++) samples[i] /= numChannels;
-  } else {
-    samples = buffer.getChannelData(0);
-  }
-
-  const threshold = Math.pow(10, thresholdDb / 20);
-  const hopSize = Math.round(sr * hopSizeMs / 1000);
-  const minIntervalSamples = sr * minIntervalMs / 1000;
-  const winSize = Math.min(Math.round(minIntervalSamples), 4 * hopSize);
-  const minLength = Math.round(sr * minLengthMs / 1000 / hopSize);
-  const minInterval = Math.round(minIntervalSamples / hopSize);
-  const maxSilKept = Math.round(sr * maxSilKeptMs / 1000 / hopSize);
-
-  if (samples.length <= minLength * hopSize) {
-    return [extractChunk(buffer, 0, buffer.length)];
-  }
-
-  const rmsList = getRMS(samples, winSize, hopSize);
-  const silTags = [];
-  let silenceStart = null;
-  let clipStart = 0;
-
-  for (let i = 0; i < rmsList.length; i++) {
-    if (rmsList[i] < threshold) {
-      if (silenceStart === null) silenceStart = i;
-      continue;
-    }
-    if (silenceStart === null) continue;
-
-    const isLeadingSilence = silenceStart === 0 && i > maxSilKept;
-    const needSliceMiddle = (i - silenceStart >= minInterval) && (i - clipStart >= minLength);
-
-    if (!isLeadingSilence && !needSliceMiddle) { silenceStart = null; continue; }
-
-    if (i - silenceStart <= maxSilKept) {
-      const pos = argmin(rmsList, silenceStart, i + 1) + silenceStart;
-      silTags.push(silenceStart === 0 ? [0, pos] : [pos, pos]);
-      clipStart = pos;
-    } else if (i - silenceStart <= maxSilKept * 2) {
-      const pos = argmin(rmsList, i - maxSilKept, silenceStart + maxSilKept + 1) + (i - maxSilKept);
-      const posL = argmin(rmsList, silenceStart, silenceStart + maxSilKept + 1) + silenceStart;
-      const posR = argmin(rmsList, i - maxSilKept, i + 1) + (i - maxSilKept);
-      if (silenceStart === 0) { silTags.push([0, posR]); clipStart = posR; }
-      else { silTags.push([Math.min(posL, pos), Math.max(posR, pos)]); clipStart = Math.max(posR, pos); }
-    } else {
-      const posL = argmin(rmsList, silenceStart, silenceStart + maxSilKept + 1) + silenceStart;
-      const posR = argmin(rmsList, i - maxSilKept, i + 1) + (i - maxSilKept);
-      silTags.push(silenceStart === 0 ? [0, posR] : [posL, posR]);
-      clipStart = posR;
-    }
-    silenceStart = null;
-  }
-
-  const totalFrames = rmsList.length;
-  if (silenceStart !== null && totalFrames - silenceStart >= minInterval) {
-    const silenceEnd = Math.min(totalFrames, silenceStart + maxSilKept);
-    const pos = argmin(rmsList, silenceStart, silenceEnd + 1) + silenceStart;
-    silTags.push([pos, totalFrames + 1]);
-  }
-
-  if (silTags.length === 0) return [extractChunk(buffer, 0, buffer.length)];
-
-  const result = [];
-  if (silTags[0][0] > 0) result.push(extractChunk(buffer, 0, silTags[0][0] * hopSize));
-  for (let i = 0; i < silTags.length - 1; i++) {
-    const s = silTags[i][1] * hopSize, e = silTags[i + 1][0] * hopSize;
-    if (e > s) result.push(extractChunk(buffer, s, e));
-  }
-  if (silTags[silTags.length - 1][1] < totalFrames)
-    result.push(extractChunk(buffer, silTags[silTags.length - 1][1] * hopSize, buffer.length));
-  return result;
-}
-
 function argmin(arr, start, end) {
-  let minVal = Infinity, minIdx = 0;
-  const e = Math.min(end, arr.length);
-  for (let i = start; i < e; i++) { if (arr[i] < minVal) { minVal = arr[i]; minIdx = i - start; } }
-  return minIdx;
+  let mv = Infinity, mi = 0; const e = Math.min(end, arr.length);
+  for (let i = start; i < e; i++) { if (arr[i] < mv) { mv = arr[i]; mi = i - start; } }
+  return mi;
 }
 
-function extractChunk(buffer, startSample, endSample) {
-  const s = Math.max(0, startSample);
-  const e = Math.min(buffer.length, endSample);
-  const len = e - s;
+// ── Slicer ──
+function sliceAudio(buffer, threshDb, minLenMs, minIntMs, hopMs, maxSilMs) {
+  const sr = buffer.sampleRate, nCh = buffer.numberOfChannels;
+  let samples;
+  if (nCh > 1) {
+    samples = new Float32Array(buffer.length);
+    for (let c = 0; c < nCh; c++) { const d = buffer.getChannelData(c); for (let i = 0; i < buffer.length; i++) samples[i] += d[i]; }
+    for (let i = 0; i < buffer.length; i++) samples[i] /= nCh;
+  } else samples = buffer.getChannelData(0);
+
+  const thresh = Math.pow(10, threshDb / 20);
+  const hop = Math.round(sr * hopMs / 1000);
+  const minIntS = sr * minIntMs / 1000;
+  const win = Math.min(Math.round(minIntS), 4 * hop);
+  const minLen = Math.round(sr * minLenMs / 1000 / hop);
+  const minInt = Math.round(minIntS / hop);
+  const maxSil = Math.round(sr * maxSilMs / 1000 / hop);
+
+  if (samples.length <= minLen * hop) return [exChunk(buffer, 0, buffer.length)];
+
+  const rms = getRMS(samples, win, hop);
+  const tags = [];
+  let ss = null, cs = 0;
+
+  for (let i = 0; i < rms.length; i++) {
+    if (rms[i] < thresh) { if (ss === null) ss = i; continue; }
+    if (ss === null) continue;
+    const isLead = ss === 0 && i > maxSil;
+    const needMid = (i - ss >= minInt) && (i - cs >= minLen);
+    if (!isLead && !needMid) { ss = null; continue; }
+
+    if (i - ss <= maxSil) {
+      const p = argmin(rms, ss, i + 1) + ss;
+      tags.push(ss === 0 ? [0, p] : [p, p]); cs = p;
+    } else if (i - ss <= maxSil * 2) {
+      const p = argmin(rms, i - maxSil, ss + maxSil + 1) + (i - maxSil);
+      const pL = argmin(rms, ss, ss + maxSil + 1) + ss;
+      const pR = argmin(rms, i - maxSil, i + 1) + (i - maxSil);
+      if (ss === 0) { tags.push([0, pR]); cs = pR; }
+      else { tags.push([Math.min(pL, p), Math.max(pR, p)]); cs = Math.max(pR, p); }
+    } else {
+      const pL = argmin(rms, ss, ss + maxSil + 1) + ss;
+      const pR = argmin(rms, i - maxSil, i + 1) + (i - maxSil);
+      tags.push(ss === 0 ? [0, pR] : [pL, pR]); cs = pR;
+    }
+    ss = null;
+  }
+
+  const tf = rms.length;
+  if (ss !== null && tf - ss >= minInt) {
+    const se = Math.min(tf, ss + maxSil);
+    tags.push([argmin(rms, ss, se + 1) + ss, tf + 1]);
+  }
+
+  if (!tags.length) return [exChunk(buffer, 0, buffer.length)];
+  const res = [];
+  if (tags[0][0] > 0) res.push(exChunk(buffer, 0, tags[0][0] * hop));
+  for (let i = 0; i < tags.length - 1; i++) { const s = tags[i][1] * hop, e = tags[i + 1][0] * hop; if (e > s) res.push(exChunk(buffer, s, e)); }
+  if (tags[tags.length - 1][1] < tf) res.push(exChunk(buffer, tags[tags.length - 1][1] * hop, buffer.length));
+  return res;
+}
+
+function exChunk(buf, s0, e0) {
+  const s = Math.max(0, s0), e = Math.min(buf.length, e0), len = e - s;
   if (len <= 0) return null;
-  const offCtx = new OfflineAudioContext(buffer.numberOfChannels, len, buffer.sampleRate);
-  const newBuf = offCtx.createBuffer(buffer.numberOfChannels, len, buffer.sampleRate);
-  for (let ch = 0; ch < buffer.numberOfChannels; ch++) {
-    const src = buffer.getChannelData(ch);
-    const dst = newBuf.getChannelData(ch);
-    for (let i = 0; i < len; i++) dst[i] = src[s + i];
-  }
-  return newBuf;
+  const ctx = new OfflineAudioContext(buf.numberOfChannels, len, buf.sampleRate);
+  const nb = ctx.createBuffer(buf.numberOfChannels, len, buf.sampleRate);
+  for (let c = 0; c < buf.numberOfChannels; c++) { const src = buf.getChannelData(c), dst = nb.getChannelData(c); for (let i = 0; i < len; i++) dst[i] = src[s + i]; }
+  return nb;
 }
 
-// ── Stereo voice balance: mix to mono → duplicate to L+R ──
-function makeStereoBalanced(buf) {
-  const sr = buf.sampleRate;
-  const len = buf.length;
-  const offCtx = new OfflineAudioContext(2, len, sr);
-  const stereoBuf = offCtx.createBuffer(2, len, sr);
-  const mono = new Float32Array(len);
-  const numCh = buf.numberOfChannels;
-  for (let ch = 0; ch < numCh; ch++) {
-    const src = buf.getChannelData(ch);
-    for (let i = 0; i < len; i++) mono[i] += src[i];
-  }
-  if (numCh > 1) for (let i = 0; i < len; i++) mono[i] /= numCh;
-  stereoBuf.getChannelData(0).set(mono);
-  stereoBuf.getChannelData(1).set(mono);
-  return stereoBuf;
-}
-
-// ── Merge short chunks with neighbors ──
-function mergeShortChunks(chunkList, minDurSec) {
-  if (minDurSec <= 0 || chunkList.length <= 1) return chunkList;
-  const sr = chunkList[0].sampleRate;
-  const numCh = chunkList[0].numberOfChannels;
-  const minSamples = Math.round(minDurSec * sr);
-
-  // Group chunks: merge short ones into their nearest neighbor
-  let merged = [...chunkList];
-  let changed = true;
+// ── Merge short chunks ──
+function mergeShort(list, minSec) {
+  if (minSec <= 0 || list.length <= 1) return list;
+  const sr = list[0].sampleRate, nCh = list[0].numberOfChannels, minS = Math.round(minSec * sr);
+  let m = [...list], changed = true;
   while (changed) {
     changed = false;
-    for (let i = 0; i < merged.length; i++) {
-      if (merged[i].length >= minSamples) continue;
-      // Find best neighbor to merge with (prefer shorter neighbor to keep things balanced)
-      let mergeIdx = -1;
-      if (i === 0 && merged.length > 1) mergeIdx = 1;
-      else if (i === merged.length - 1) mergeIdx = i - 1;
-      else {
-        // Merge with whichever neighbor is shorter
-        mergeIdx = merged[i - 1].length <= merged[i + 1].length ? i - 1 : i + 1;
-      }
-      if (mergeIdx < 0) break;
-      const a = Math.min(i, mergeIdx), b = Math.max(i, mergeIdx);
-      const bufA = merged[a], bufB = merged[b];
-      const totalLen = bufA.length + bufB.length;
-      const offCtx = new OfflineAudioContext(numCh, totalLen, sr);
-      const newBuf = offCtx.createBuffer(numCh, totalLen, sr);
-      for (let ch = 0; ch < numCh; ch++) {
-        const dst = newBuf.getChannelData(ch);
-        const srcA = bufA.getChannelData(ch);
-        const srcB = bufB.getChannelData(ch);
-        dst.set(srcA, 0);
-        dst.set(srcB, srcA.length);
-      }
-      merged.splice(a, 2, newBuf);
-      changed = true;
-      break; // restart loop after mutation
+    for (let i = 0; i < m.length; i++) {
+      if (m[i].length >= minS) continue;
+      let mi = -1;
+      if (i === 0 && m.length > 1) mi = 1;
+      else if (i === m.length - 1) mi = i - 1;
+      else mi = m[i - 1].length <= m[i + 1].length ? i - 1 : i + 1;
+      if (mi < 0) break;
+      const a = Math.min(i, mi), b = Math.max(i, mi);
+      const bA = m[a], bB = m[b], tl = bA.length + bB.length;
+      const ctx = new OfflineAudioContext(nCh, tl, sr);
+      const nb = ctx.createBuffer(nCh, tl, sr);
+      for (let c = 0; c < nCh; c++) { const d = nb.getChannelData(c); d.set(bA.getChannelData(c), 0); d.set(bB.getChannelData(c), bA.length); }
+      m.splice(a, 2, nb); changed = true; break;
     }
   }
-  return merged;
+  return m;
 }
 
-// ── Peak normalize: scale all channels so peak hits target dB ──
+// ── Mono mixdown ──
+function toMono(buf) {
+  const len = buf.length, sr = buf.sampleRate, nCh = buf.numberOfChannels;
+  if (nCh === 1) return buf;
+  const ctx = new OfflineAudioContext(1, len, sr);
+  const nb = ctx.createBuffer(1, len, sr);
+  const dst = nb.getChannelData(0);
+  for (let c = 0; c < nCh; c++) { const s = buf.getChannelData(c); for (let i = 0; i < len; i++) dst[i] += s[i]; }
+  for (let i = 0; i < len; i++) dst[i] /= nCh;
+  return nb;
+}
+
+// ── Resample (linear interpolation) ──
+function resample(buf, targetSR) {
+  if (buf.sampleRate === targetSR) return buf;
+  const ratio = targetSR / buf.sampleRate;
+  const nCh = buf.numberOfChannels;
+  const newLen = Math.round(buf.length * ratio);
+  const ctx = new OfflineAudioContext(nCh, newLen, targetSR);
+  const nb = ctx.createBuffer(nCh, newLen, targetSR);
+  for (let c = 0; c < nCh; c++) {
+    const src = buf.getChannelData(c), dst = nb.getChannelData(c);
+    for (let i = 0; i < newLen; i++) {
+      const srcPos = i / ratio;
+      const idx = Math.floor(srcPos);
+      const frac = srcPos - idx;
+      const s0 = src[idx] || 0;
+      const s1 = src[idx + 1] !== undefined ? src[idx + 1] : s0;
+      dst[i] = s0 + (s1 - s0) * frac;
+    }
+  }
+  return nb;
+}
+
+// ── High-pass filter (2nd order Butterworth) ──
+function applyHighPass(buf, cutoffHz) {
+  const sr = buf.sampleRate, nCh = buf.numberOfChannels, len = buf.length;
+  const ctx = new OfflineAudioContext(nCh, len, sr);
+  const nb = ctx.createBuffer(nCh, len, sr);
+
+  // Compute coefficients
+  const w0 = 2 * Math.PI * cutoffHz / sr;
+  const alpha = Math.sin(w0) / (2 * 0.7071); // Q = 0.7071 for Butterworth
+  const cosw0 = Math.cos(w0);
+  const b0 = (1 + cosw0) / 2;
+  const b1 = -(1 + cosw0);
+  const b2 = (1 + cosw0) / 2;
+  const a0 = 1 + alpha;
+  const a1 = -2 * cosw0;
+  const a2 = 1 - alpha;
+
+  for (let c = 0; c < nCh; c++) {
+    const src = buf.getChannelData(c), dst = nb.getChannelData(c);
+    let x1 = 0, x2 = 0, y1 = 0, y2 = 0;
+    for (let i = 0; i < len; i++) {
+      const x = src[i];
+      const y = (b0 * x + b1 * x1 + b2 * x2 - a1 * y1 - a2 * y2) / a0;
+      dst[i] = y;
+      x2 = x1; x1 = x; y2 = y1; y1 = y;
+    }
+  }
+  return nb;
+}
+
+// ── Noise gate ──
+function applyNoiseGate(buf, threshDb) {
+  const sr = buf.sampleRate, nCh = buf.numberOfChannels, len = buf.length;
+  const ctx = new OfflineAudioContext(nCh, len, sr);
+  const nb = ctx.createBuffer(nCh, len, sr);
+  const thresh = Math.pow(10, threshDb / 20);
+
+  // Compute RMS envelope on mono mix for gating decisions
+  const mono = new Float32Array(len);
+  for (let c = 0; c < nCh; c++) { const s = buf.getChannelData(c); for (let i = 0; i < len; i++) mono[i] += s[i]; }
+  if (nCh > 1) for (let i = 0; i < len; i++) mono[i] /= nCh;
+
+  // RMS with ~10ms window
+  const winSamples = Math.round(sr * 0.01);
+  const envelope = new Float32Array(len);
+  let sum = 0;
+  for (let i = 0; i < len; i++) {
+    sum += mono[i] * mono[i];
+    if (i >= winSamples) sum -= mono[i - winSamples] * mono[i - winSamples];
+    envelope[i] = Math.sqrt(sum / Math.min(i + 1, winSamples));
+  }
+
+  // Smooth gate with 5ms attack/release
+  const smoothSamples = Math.round(sr * 0.005);
+  const gate = new Float32Array(len);
+  let g = 0;
+  for (let i = 0; i < len; i++) {
+    const target = envelope[i] >= thresh ? 1 : 0;
+    const coeff = target > g ? 1 / smoothSamples : 1 / (smoothSamples * 4);
+    g += (target - g) * coeff;
+    gate[i] = g;
+  }
+
+  for (let c = 0; c < nCh; c++) {
+    const src = buf.getChannelData(c), dst = nb.getChannelData(c);
+    for (let i = 0; i < len; i++) dst[i] = src[i] * gate[i];
+  }
+  return nb;
+}
+
+// ── Trim leading/trailing silence ──
+function trimSilence(buf, threshDb) {
+  const thresh = Math.pow(10, (threshDb || -50) / 20);
+  const nCh = buf.numberOfChannels, len = buf.length, sr = buf.sampleRate;
+  // Use mono for detection
+  const mono = new Float32Array(len);
+  for (let c = 0; c < nCh; c++) { const s = buf.getChannelData(c); for (let i = 0; i < len; i++) mono[i] += Math.abs(s[i]); }
+  if (nCh > 1) for (let i = 0; i < len; i++) mono[i] /= nCh;
+
+  let start = 0, end = len - 1;
+  // Pad: keep ~20ms before first sound and after last
+  const pad = Math.round(sr * 0.02);
+  while (start < len && mono[start] < thresh) start++;
+  while (end > start && mono[end] < thresh) end--;
+  start = Math.max(0, start - pad);
+  end = Math.min(len - 1, end + pad);
+
+  const newLen = end - start + 1;
+  if (newLen <= 0 || newLen === len) return buf;
+  const ctx = new OfflineAudioContext(nCh, newLen, sr);
+  const nb = ctx.createBuffer(nCh, newLen, sr);
+  for (let c = 0; c < nCh; c++) { const src = buf.getChannelData(c), dst = nb.getChannelData(c); for (let i = 0; i < newLen; i++) dst[i] = src[start + i]; }
+  return nb;
+}
+
+// ── Normalize ──
 function normalizeBuffer(buf, targetDb) {
-  const numCh = buf.numberOfChannels;
-  const len = buf.length;
-  const sr = buf.sampleRate;
-
-  // Find global peak across all channels
+  const nCh = buf.numberOfChannels, len = buf.length, sr = buf.sampleRate;
   let peak = 0;
-  for (let ch = 0; ch < numCh; ch++) {
-    const data = buf.getChannelData(ch);
-    for (let i = 0; i < len; i++) {
-      const abs = Math.abs(data[i]);
-      if (abs > peak) peak = abs;
-    }
-  }
-
-  if (peak === 0) return buf; // silent chunk, skip
-
-  const targetLinear = Math.pow(10, targetDb / 20);
-  const gain = targetLinear / peak;
-
-  const offCtx = new OfflineAudioContext(numCh, len, sr);
-  const newBuf = offCtx.createBuffer(numCh, len, sr);
-  for (let ch = 0; ch < numCh; ch++) {
-    const src = buf.getChannelData(ch);
-    const dst = newBuf.getChannelData(ch);
-    for (let i = 0; i < len; i++) {
-      dst[i] = Math.max(-1, Math.min(1, src[i] * gain));
-    }
-  }
-  return newBuf;
+  for (let c = 0; c < nCh; c++) { const d = buf.getChannelData(c); for (let i = 0; i < len; i++) { const a = Math.abs(d[i]); if (a > peak) peak = a; } }
+  if (peak === 0) return buf;
+  const gain = Math.pow(10, targetDb / 20) / peak;
+  const ctx = new OfflineAudioContext(nCh, len, sr);
+  const nb = ctx.createBuffer(nCh, len, sr);
+  for (let c = 0; c < nCh; c++) { const src = buf.getChannelData(c), dst = nb.getChannelData(c); for (let i = 0; i < len; i++) dst[i] = Math.max(-1, Math.min(1, src[i] * gain)); }
+  return nb;
 }
 
-// ── Slice button ──
+// ── Clipping detection ──
+function detectClipping(buf) {
+  const nCh = buf.numberOfChannels, len = buf.length;
+  let clipCount = 0, maxAbs = 0;
+  const clipThresh = 0.99;
+  for (let c = 0; c < nCh; c++) {
+    const d = buf.getChannelData(c);
+    for (let i = 0; i < len; i++) {
+      const a = Math.abs(d[i]);
+      if (a > maxAbs) maxAbs = a;
+      // Detect consecutive clipped samples (3+ in a row = real clipping)
+      if (a >= clipThresh) clipCount++;
+    }
+  }
+  const clipRatio = clipCount / (len * nCh);
+  if (clipRatio > 0.001) return 'clip'; // >0.1% samples clipped
+  if (maxAbs < 0.05) return 'quiet'; // very quiet chunk
+  return 'ok';
+}
+
+// ══════════════════════════════════════
+// SLICE & PROCESS PIPELINE
+// ══════════════════════════════════════
+
 sliceBtn.addEventListener('click', () => {
   if (!audioBuffer) return;
   stopPlaying();
@@ -1059,214 +755,202 @@ sliceBtn.addEventListener('click', () => {
   resultsCard.classList.add('hidden');
 
   requestAnimationFrame(() => setTimeout(() => {
-    const t = +params.threshold.value;
-    const ml = +params.minLength.value;
-    const mi = +params.minInterval.value;
-    const hs = +params.hopSize.value;
-    const ms = +params.maxSilKept.value;
-    const md = +params.minDuration.value;
+    const setStatus = t => { processingText.textContent = t; };
 
-    let raw = sliceAudio(audioBuffer, t, ml, mi, hs, ms).filter(Boolean);
-    if (stereoBalanceToggle.checked) raw = raw.map(makeStereoBalanced);
-    raw = mergeShortChunks(raw, md);
-    if (normalizeToggle.checked) {
-      const targetDb = +targetLevelSlider.value;
-      raw = raw.map(c => normalizeBuffer(c, targetDb));
+    setStatus('Slicing audio...');
+    let raw = sliceAudio(
+      audioBuffer,
+      +sliderParams.threshold.el.value,
+      +sliderParams.minLength.el.value,
+      +sliderParams.minInterval.el.value,
+      +sliderParams.hopSize.el.value,
+      +sliderParams.maxSilKept.el.value
+    ).filter(Boolean);
+
+    // Merge short
+    setStatus('Merging short chunks...');
+    raw = mergeShort(raw, +sliderParams.minDuration.el.value);
+
+    // Mono
+    if (monoToggle.checked) {
+      setStatus('Converting to mono...');
+      raw = raw.map(toMono);
     }
+
+    // Resample
+    const tSR = +$('targetSR').value;
+    if (tSR > 0) {
+      setStatus(`Resampling to ${tSR} Hz...`);
+      raw = raw.map(c => resample(c, tSR));
+    }
+
+    // High-pass filter
+    if (highPassToggle.checked) {
+      setStatus('Applying high-pass filter...');
+      const freq = +sliderParams.hpFreq.el.value;
+      raw = raw.map(c => applyHighPass(c, freq));
+    }
+
+    // Noise gate
+    if (noiseGateToggle.checked) {
+      setStatus('Applying noise gate...');
+      const ngT = +sliderParams.ngThresh.el.value;
+      raw = raw.map(c => applyNoiseGate(c, ngT));
+    }
+
+    // Trim edges
+    if (trimEdgesToggle.checked) {
+      setStatus('Trimming silence edges...');
+      raw = raw.map(c => trimSilence(c, +sliderParams.threshold.el.value));
+    }
+
+    // Normalize
+    if (normalizeToggle.checked) {
+      setStatus('Normalizing levels...');
+      const tgt = +sliderParams.targetLevel.el.value;
+      raw = raw.map(c => normalizeBuffer(c, tgt));
+    }
+
+    // Detect clipping
+    if (detectClipToggle.checked) {
+      setStatus('Checking for clipping...');
+      chunkFlags = raw.map(detectClipping);
+    } else {
+      chunkFlags = raw.map(() => 'ok');
+    }
+
     chunks = raw;
     processingCard.classList.add('hidden');
     renderResults();
   }, 50));
 });
 
-// ── Selection ──
-function toggleSel(idx) {
-  selectedChunks.has(idx) ? selectedChunks.delete(idx) : selectedChunks.add(idx);
-  updateSelUI();
-}
+// ══════════════════════════════════════
+// UI: SELECTION, RESULTS, PLAYBACK
+// ══════════════════════════════════════
 
+function toggleSel(i) { selectedChunks.has(i) ? selectedChunks.delete(i) : selectedChunks.add(i); updateSelUI(); }
 function updateSelUI() {
   selectionToolbar.classList.toggle('active', selectedChunks.size > 0);
   selectionInfo.textContent = `${selectedChunks.size} selected`;
-  document.querySelectorAll('.chunk-item').forEach((item, i) => {
-    item.classList.toggle('selected', selectedChunks.has(i));
-  });
+  document.querySelectorAll('.chunk-item').forEach((el, i) => el.classList.toggle('selected', selectedChunks.has(i)));
 }
-
-selectAllBtn.addEventListener('click', () => {
-  for (let i = 0; i < chunks.length; i++) selectedChunks.add(i);
-  updateSelUI();
-});
-
+selectAllBtn.addEventListener('click', () => { for (let i = 0; i < chunks.length; i++) selectedChunks.add(i); updateSelUI(); });
 deselectBtn.addEventListener('click', () => { selectedChunks.clear(); updateSelUI(); });
-
 deleteSelectedBtn.addEventListener('click', () => {
-  if (selectedChunks.size === 0) return;
-  stopPlaying();
-  [...selectedChunks].sort((a, b) => b - a).forEach(idx => chunks.splice(idx, 1));
-  selectedChunks.clear();
-  renderResults();
+  if (!selectedChunks.size) return; stopPlaying();
+  [...selectedChunks].sort((a, b) => b - a).forEach(i => { chunks.splice(i, 1); chunkFlags.splice(i, 1); });
+  selectedChunks.clear(); renderResults();
 });
 
-// ── Render results ──
 function renderResults() {
   resultsCard.classList.remove('hidden');
-  if (chunks.length === 0) {
-    statsBar.innerHTML = '';
-    chunksList.innerHTML = '<div class="empty-msg">All chunks deleted. Re-slice to start over.</div>';
-    selectionToolbar.classList.remove('active');
-    downloadZipBtn.classList.add('hidden');
-    return;
+  if (!chunks.length) {
+    statsBar.innerHTML = ''; chunksList.innerHTML = '<div class="empty-msg">All chunks deleted. Re-slice to start over.</div>';
+    selectionToolbar.classList.remove('active'); downloadZipBtn.classList.add('hidden'); return;
   }
   downloadZipBtn.classList.remove('hidden');
 
   const totalDur = chunks.reduce((s, c) => s + c.duration, 0);
-  const isStereo = chunks[0].numberOfChannels === 2;
-  statsBar.innerHTML = `
+  const clipCount = chunkFlags.filter(f => f === 'clip').length;
+  const quietCount = chunkFlags.filter(f => f === 'quiet').length;
+
+  let statsHtml = `
     <div class="stat"><div class="stat-label">Chunks</div><div class="stat-value accent">${chunks.length}</div></div>
-    <div class="stat"><div class="stat-label">Total</div><div class="stat-value green">${formatTime(totalDur)}</div></div>
-    <div class="stat"><div class="stat-label">Output</div><div class="stat-value">${isStereo ? 'Stereo' : 'Mono'} · ${chunks[0].sampleRate} Hz</div></div>
+    <div class="stat"><div class="stat-label">Total</div><div class="stat-value green">${fmtTime(totalDur)}</div></div>
+    <div class="stat"><div class="stat-label">Output</div><div class="stat-value">${chunks[0].numberOfChannels === 1 ? 'Mono' : 'Stereo'} · ${chunks[0].sampleRate} Hz</div></div>
   `;
+  if (clipCount > 0) statsHtml += `<div class="stat"><div class="stat-label">Clipped</div><div class="stat-value" style="color:var(--red)">${clipCount}</div></div>`;
+  if (quietCount > 0) statsHtml += `<div class="stat"><div class="stat-label">Quiet</div><div class="stat-value" style="color:var(--yellow)">${quietCount}</div></div>`;
+  statsBar.innerHTML = statsHtml;
 
   chunksList.innerHTML = '';
   chunks.forEach((chunk, i) => {
     const item = document.createElement('div');
     item.className = 'chunk-item';
-    const miniCanvas = document.createElement('canvas');
-    miniCanvas.width = 300; miniCanvas.height = 32;
-    const st = chunk.numberOfChannels === 2;
+    if (selectedChunks.has(i)) item.classList.add('selected');
+    const mc = document.createElement('canvas'); mc.width = 300; mc.height = 32;
+
+    const flag = chunkFlags[i] || 'ok';
+    const badgeClass = flag === 'clip' ? 'badge-clip' : flag === 'quiet' ? 'badge-quiet' : 'badge-ok';
+    const badgeText = flag === 'clip' ? 'CLIP' : flag === 'quiet' ? 'QUIET' : 'OK';
+
     item.innerHTML = `
       <div class="chunk-check" data-idx="${i}">✓</div>
       <div class="chunk-num">#${String(i + 1).padStart(2, '0')}</div>
       <div class="chunk-bar"></div>
-      ${st ? '<div class="chunk-badge">ST</div>' : ''}
-      <div class="chunk-dur">${formatTime(chunk.duration)}</div>
+      <div class="chunk-badge ${badgeClass}">${badgeText}</div>
+      <div class="chunk-dur">${fmtTime(chunk.duration)}</div>
       <button class="chunk-play" data-idx="${i}" title="Play">▶</button>
       <button class="chunk-dl" data-idx="${i}" title="Download">⬇</button>
     `;
-    item.querySelector('.chunk-bar').appendChild(miniCanvas);
-    drawMiniWave(miniCanvas, chunk);
+    item.querySelector('.chunk-bar').appendChild(mc);
+    drawMini(mc, chunk);
     chunksList.appendChild(item);
   });
   updateSelUI();
 }
 
 chunksList.addEventListener('click', e => {
-  const play = e.target.closest('.chunk-play');
-  const dl = e.target.closest('.chunk-dl');
-  const chk = e.target.closest('.chunk-check');
-  if (play) togglePlay(+play.dataset.idx);
-  else if (dl) downloadChunk(+dl.dataset.idx);
-  else if (chk) toggleSel(+chk.dataset.idx);
+  const p = e.target.closest('.chunk-play'), d = e.target.closest('.chunk-dl'), c = e.target.closest('.chunk-check');
+  if (p) togglePlay(+p.dataset.idx); else if (d) dlChunk(+d.dataset.idx); else if (c) toggleSel(+c.dataset.idx);
 });
 
-function drawMiniWave(canvas, buffer) {
-  const ctx = canvas.getContext('2d');
-  const data = buffer.getChannelData(0);
-  const w = canvas.width, h = canvas.height;
+function drawMini(canvas, buf) {
+  const ctx = canvas.getContext('2d'), data = buf.getChannelData(0), w = canvas.width, h = canvas.height;
   const step = Math.ceil(data.length / w);
   ctx.fillStyle = '#3d5afe88';
-  for (let i = 0; i < w; i++) {
-    let mx = 0;
-    for (let j = 0; j < step; j++) { const v = Math.abs(data[i * step + j] || 0); if (v > mx) mx = v; }
-    const bh = mx * h;
-    ctx.fillRect(i, (h - bh) / 2, 1, bh);
-  }
+  for (let i = 0; i < w; i++) { let mx = 0; for (let j = 0; j < step; j++) { const v = Math.abs(data[i * step + j] || 0); if (v > mx) mx = v; } ctx.fillRect(i, (h - mx * h) / 2, 1, mx * h); }
 }
 
 // ── Playback ──
-function togglePlay(idx) {
-  if (playingIdx === idx) { stopPlaying(); return; }
+function togglePlay(i) {
+  if (playingIdx === i) { stopPlaying(); return; }
   stopPlaying();
-  const chunk = chunks[idx];
-  if (!chunk) return;
-  const src = audioCtx.createBufferSource();
-  src.buffer = chunk;
-  src.connect(audioCtx.destination);
-  src.onended = () => { if (playingIdx === idx) stopPlaying(); };
-  src.start();
-  playingSource = src;
-  playingIdx = idx;
-  updatePlayBtns();
+  const c = chunks[i]; if (!c) return;
+  const s = audioCtx.createBufferSource(); s.buffer = c; s.connect(audioCtx.destination);
+  s.onended = () => { if (playingIdx === i) stopPlaying(); };
+  s.start(); playingSource = s; playingIdx = i; updatePlayBtns();
 }
-
-function stopPlaying() {
-  if (playingSource) { try { playingSource.stop(); } catch(e){} playingSource = null; }
-  playingIdx = -1;
-  updatePlayBtns();
-}
-
-function updatePlayBtns() {
-  document.querySelectorAll('.chunk-play').forEach(btn => {
-    const idx = +btn.dataset.idx;
-    btn.classList.toggle('playing', idx === playingIdx);
-    btn.textContent = idx === playingIdx ? '⏸' : '▶';
-  });
-}
+function stopPlaying() { if (playingSource) { try { playingSource.stop(); } catch(e){} playingSource = null; } playingIdx = -1; updatePlayBtns(); }
+function updatePlayBtns() { document.querySelectorAll('.chunk-play').forEach(b => { const i = +b.dataset.idx; b.classList.toggle('playing', i === playingIdx); b.textContent = i === playingIdx ? '⏸' : '▶'; }); }
 
 // ── WAV export ──
-function audioBufferToWav(buffer) {
-  const numCh = buffer.numberOfChannels, sr = buffer.sampleRate, len = buffer.length;
-  const bps = 2, blockAlign = numCh * bps, dataSize = len * blockAlign;
-  const ab = new ArrayBuffer(44 + dataSize);
-  const v = new DataView(ab);
+function bufToWav(buf) {
+  const nCh = buf.numberOfChannels, sr = buf.sampleRate, len = buf.length;
+  const ba = nCh * 2, ds = len * ba, bs = 44 + ds;
+  const ab = new ArrayBuffer(bs), v = new DataView(ab);
   const ws = (o, s) => { for (let i = 0; i < s.length; i++) v.setUint8(o + i, s.charCodeAt(i)); };
-  ws(0,'RIFF'); v.setUint32(4, 36 + dataSize, true); ws(8,'WAVE'); ws(12,'fmt ');
-  v.setUint32(16, 16, true); v.setUint16(20, 1, true); v.setUint16(22, numCh, true);
-  v.setUint32(24, sr, true); v.setUint32(28, sr * blockAlign, true);
-  v.setUint16(32, blockAlign, true); v.setUint16(34, 16, true);
-  ws(36,'data'); v.setUint32(40, dataSize, true);
-  let off = 44;
-  const chs = [];
-  for (let c = 0; c < numCh; c++) chs.push(buffer.getChannelData(c));
-  for (let i = 0; i < len; i++) {
-    for (let c = 0; c < numCh; c++) {
-      let s = Math.max(-1, Math.min(1, chs[c][i]));
-      v.setInt16(off, s < 0 ? s * 0x8000 : s * 0x7FFF, true);
-      off += 2;
-    }
-  }
+  ws(0,'RIFF'); v.setUint32(4, 36 + ds, true); ws(8,'WAVE'); ws(12,'fmt ');
+  v.setUint32(16, 16, true); v.setUint16(20, 1, true); v.setUint16(22, nCh, true);
+  v.setUint32(24, sr, true); v.setUint32(28, sr * ba, true); v.setUint16(32, ba, true); v.setUint16(34, 16, true);
+  ws(36,'data'); v.setUint32(40, ds, true);
+  let off = 44; const chs = [];
+  for (let c = 0; c < nCh; c++) chs.push(buf.getChannelData(c));
+  for (let i = 0; i < len; i++) for (let c = 0; c < nCh; c++) { let s = Math.max(-1, Math.min(1, chs[c][i])); v.setInt16(off, s < 0 ? s * 0x8000 : s * 0x7FFF, true); off += 2; }
   return new Blob([ab], { type: 'audio/wav' });
 }
 
-function downloadChunk(idx) {
-  const chunk = chunks[idx];
-  if (!chunk) return;
-  const blob = audioBufferToWav(chunk);
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url; a.download = `split_${idx}.wav`; a.click();
-  URL.revokeObjectURL(url);
+function dlChunk(i) {
+  const c = chunks[i]; if (!c) return;
+  const b = bufToWav(c), u = URL.createObjectURL(b), a = document.createElement('a');
+  a.href = u; a.download = `split_${i}.wav`; a.click(); URL.revokeObjectURL(u);
 }
 
 downloadZipBtn.addEventListener('click', async () => {
-  if (chunks.length === 0) return;
-  downloadZipBtn.disabled = true;
-  downloadZipBtn.textContent = '⏳ Zipping...';
+  if (!chunks.length) return;
+  downloadZipBtn.disabled = true; downloadZipBtn.textContent = '⏳ Zipping...';
   try {
     const zip = new JSZip();
-    chunks.forEach((chunk, i) => {
-      const blob = audioBufferToWav(chunk);
-      zip.file(`split_${i}.wav`, blob);
-    });
-    const content = await zip.generateAsync({ type: 'blob', compression: 'DEFLATE', compressionOptions: { level: 6 } });
-    const url = URL.createObjectURL(content);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = 'audio_slices.zip';
-    a.click();
-    URL.revokeObjectURL(url);
-  } catch (err) {
-    alert('Zip failed: ' + err.message);
-  }
-  downloadZipBtn.disabled = false;
-  downloadZipBtn.textContent = '⬇ Download All (.zip)';
+    chunks.forEach((c, i) => zip.file(`split_${i}.wav`, bufToWav(c)));
+    const blob = await zip.generateAsync({ type: 'blob', compression: 'DEFLATE', compressionOptions: { level: 6 } });
+    const u = URL.createObjectURL(blob), a = document.createElement('a');
+    a.href = u; a.download = 'rvc_dataset.zip'; a.click(); URL.revokeObjectURL(u);
+  } catch (e) { alert('Zip failed: ' + e.message); }
+  downloadZipBtn.disabled = false; downloadZipBtn.textContent = '⬇ Download All (.zip)';
 });
 
-function formatTime(sec) {
-  const m = Math.floor(sec / 60), s = (sec % 60).toFixed(1);
-  return m > 0 ? `${m}m ${s}s` : `${s}s`;
-}
+function fmtTime(s) { const m = Math.floor(s / 60), sec = (s % 60).toFixed(1); return m > 0 ? `${m}m ${sec}s` : `${sec}s`; }
 </script>
 </body>
 </html>
