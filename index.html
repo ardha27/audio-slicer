@@ -104,7 +104,6 @@
     margin-bottom: 16px;
   }
 
-  /* Drop zone */
   .dropzone {
     border: 2px dashed var(--border);
     border-radius: var(--radius);
@@ -132,21 +131,9 @@
     opacity: 1;
   }
 
-  .dropzone-icon {
-    font-size: 36px;
-    margin-bottom: 12px;
-    display: block;
-  }
-
-  .dropzone-text {
-    font-size: 15px;
-    color: var(--text-dim);
-  }
-
-  .dropzone-text strong {
-    color: var(--accent);
-    cursor: pointer;
-  }
+  .dropzone-icon { font-size: 36px; margin-bottom: 12px; display: block; }
+  .dropzone-text { font-size: 15px; color: var(--text-dim); }
+  .dropzone-text strong { color: var(--accent); cursor: pointer; }
 
   .file-info {
     display: flex;
@@ -183,7 +170,6 @@
     flex-shrink: 0;
   }
 
-  /* Params grid */
   .params-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
@@ -225,7 +211,64 @@
     margin-top: 4px;
   }
 
-  /* Waveform */
+  .param-hint {
+    font-size: 11px;
+    color: var(--text-dim);
+    margin-top: 6px;
+    line-height: 1.4;
+    opacity: 0.7;
+  }
+
+  .toggle-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 0;
+    border-top: 1px solid var(--border);
+    margin-top: 16px;
+  }
+
+  .toggle-label { display: flex; flex-direction: column; gap: 2px; }
+  .toggle-label-main { font-size: 14px; font-weight: 500; }
+  .toggle-label-sub { font-size: 12px; font-family: 'DM Mono', monospace; color: var(--text-dim); }
+
+  .toggle-switch {
+    position: relative;
+    width: 48px; height: 26px;
+    cursor: pointer;
+    flex-shrink: 0;
+  }
+
+  .toggle-switch input { opacity: 0; width: 0; height: 0; }
+
+  .toggle-track {
+    position: absolute; inset: 0;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 13px;
+    transition: all 0.3s;
+  }
+
+  .toggle-track::after {
+    content: '';
+    position: absolute;
+    top: 3px; left: 3px;
+    width: 18px; height: 18px;
+    border-radius: 50%;
+    background: var(--text-dim);
+    transition: all 0.3s;
+  }
+
+  .toggle-switch input:checked + .toggle-track {
+    background: var(--accent);
+    border-color: var(--accent);
+  }
+
+  .toggle-switch input:checked + .toggle-track::after {
+    transform: translateX(22px);
+    background: white;
+  }
+
   .waveform-container {
     position: relative;
     height: 160px;
@@ -234,11 +277,7 @@
     overflow: hidden;
   }
 
-  #waveformCanvas {
-    width: 100%;
-    height: 100%;
-    display: block;
-  }
+  #waveformCanvas { width: 100%; height: 100%; display: block; }
 
   .waveform-placeholder {
     position: absolute; inset: 0;
@@ -248,7 +287,6 @@
     font-size: 13px;
   }
 
-  /* Buttons */
   .btn {
     display: inline-flex; align-items: center; gap: 8px;
     padding: 12px 24px;
@@ -272,10 +310,7 @@
     transform: translateY(-1px);
   }
 
-  .btn-primary:disabled {
-    opacity: 0.4;
-    cursor: not-allowed;
-  }
+  .btn-primary:disabled { opacity: 0.4; cursor: not-allowed; }
 
   .btn-secondary {
     background: var(--surface2);
@@ -283,9 +318,7 @@
     border: 1px solid var(--border);
   }
 
-  .btn-secondary:hover {
-    border-color: var(--accent);
-  }
+  .btn-secondary:hover { border-color: var(--accent); }
 
   .actions {
     display: flex;
@@ -294,7 +327,6 @@
     flex-wrap: wrap;
   }
 
-  /* Results */
   .chunks-list {
     display: flex;
     flex-direction: column;
@@ -308,11 +340,36 @@
     padding: 12px 16px;
     background: var(--surface2);
     border-radius: 8px;
-    transition: background 0.2s;
+    border: 1px solid transparent;
+    transition: all 0.2s;
   }
 
-  .chunk-item:hover {
-    background: var(--border);
+  .chunk-item:hover { background: var(--border); }
+
+  .chunk-item.selected {
+    border-color: var(--red);
+    background: var(--red-soft);
+  }
+
+  .chunk-item.selected .chunk-num { color: var(--red); }
+
+  .chunk-check {
+    width: 20px; height: 20px;
+    border: 2px solid var(--border);
+    border-radius: 4px;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+    transition: all 0.2s;
+    font-size: 12px;
+    color: transparent;
+    background: transparent;
+  }
+
+  .chunk-item.selected .chunk-check {
+    border-color: var(--red);
+    background: var(--red);
+    color: white;
   }
 
   .chunk-num {
@@ -327,14 +384,10 @@
     height: 32px;
     background: var(--accent-soft);
     border-radius: 4px;
-    position: relative;
     overflow: hidden;
-    cursor: pointer;
   }
 
-  .chunk-bar canvas {
-    width: 100%; height: 100%; display: block;
-  }
+  .chunk-bar canvas { width: 100%; height: 100%; display: block; }
 
   .chunk-dur {
     font-family: 'DM Mono', monospace;
@@ -342,6 +395,16 @@
     color: var(--text-dim);
     min-width: 50px;
     text-align: right;
+  }
+
+  .chunk-badge {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    padding: 2px 6px;
+    border-radius: 4px;
+    background: var(--green-soft);
+    color: var(--green);
+    flex-shrink: 0;
   }
 
   .chunk-play, .chunk-dl {
@@ -373,11 +436,7 @@
     margin-bottom: 16px;
   }
 
-  .stat {
-    display: flex;
-    flex-direction: column;
-    gap: 2px;
-  }
+  .stat { display: flex; flex-direction: column; gap: 2px; }
 
   .stat-label {
     font-size: 11px;
@@ -387,15 +446,67 @@
     letter-spacing: 1px;
   }
 
-  .stat-value {
-    font-size: 18px;
-    font-weight: 600;
-  }
-
+  .stat-value { font-size: 18px; font-weight: 600; }
   .stat-value.accent { color: var(--accent); }
   .stat-value.green { color: var(--green); }
 
-  /* Processing overlay */
+  .selection-toolbar {
+    display: none;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 16px;
+    background: var(--red-soft);
+    border: 1px solid var(--red);
+    border-radius: 8px;
+    margin-bottom: 12px;
+    animation: slideDown 0.2s ease;
+  }
+
+  @keyframes slideDown {
+    from { opacity: 0; transform: translateY(-8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .selection-toolbar.active { display: flex; }
+
+  .selection-info {
+    font-size: 13px;
+    font-family: 'DM Mono', monospace;
+    color: var(--red);
+  }
+
+  .selection-actions { display: flex; gap: 8px; }
+
+  .sel-btn {
+    padding: 6px 14px;
+    border-radius: 6px;
+    font-family: 'Outfit', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    border: none;
+    transition: all 0.2s;
+  }
+
+  .sel-btn-cancel {
+    background: transparent;
+    color: var(--text-dim);
+    border: 1px solid var(--border);
+  }
+
+  .sel-btn-cancel:hover { border-color: var(--text-dim); }
+
+  .sel-btn-delete { background: var(--red); color: white; }
+  .sel-btn-delete:hover { opacity: 0.85; }
+
+  .sel-btn-all {
+    background: transparent;
+    color: var(--red);
+    border: 1px solid var(--red);
+  }
+
+  .sel-btn-all:hover { background: var(--red-soft); }
+
   .processing {
     display: none;
     align-items: center;
@@ -423,17 +534,25 @@
     color: var(--text-dim);
   }
 
-  .download-all {
-    margin-top: 16px;
-  }
+  .download-all { margin-top: 16px; }
 
   .hidden { display: none !important; }
+
+  .empty-msg {
+    text-align: center;
+    padding: 32px;
+    color: var(--text-dim);
+    font-family: 'DM Mono', monospace;
+    font-size: 13px;
+  }
 
   @media (max-width: 600px) {
     .params-grid { grid-template-columns: 1fr; }
     .app { padding: 24px 16px 60px; }
     h1 { font-size: 22px; }
     .chunk-bar { display: none; }
+    .chunk-badge { display: none; }
+    .selection-toolbar { flex-direction: column; gap: 10px; text-align: center; }
   }
 </style>
 </head>
@@ -445,10 +564,9 @@
       <div class="logo-icon">✂</div>
       <h1>Audio Slicer</h1>
     </div>
-    <div class="subtitle">silence-based audio splitting</div>
+    <div class="subtitle">silence-based audio splitting · stereo balanced</div>
   </header>
 
-  <!-- Upload -->
   <div class="card">
     <div class="card-title">Input Audio</div>
     <div class="dropzone" id="dropzone">
@@ -466,8 +584,7 @@
     </div>
   </div>
 
-  <!-- Waveform -->
-  <div class="card" id="waveformCard">
+  <div class="card">
     <div class="card-title">Waveform</div>
     <div class="waveform-container">
       <canvas id="waveformCanvas"></canvas>
@@ -475,7 +592,6 @@
     </div>
   </div>
 
-  <!-- Parameters -->
   <div class="card">
     <div class="card-title">Slicer Parameters</div>
     <div class="params-grid">
@@ -483,34 +599,56 @@
         <label>Threshold (dB)</label>
         <input type="range" id="threshold" min="-60" max="-10" value="-40" step="1">
         <div class="param-value" id="thresholdVal">-40 dB</div>
+        <div class="param-hint">Volume below this = silence. Lower catches quieter sounds.</div>
       </div>
       <div class="param-group">
-        <label>Min Length (ms)</label>
+        <label>Min Slice Gap (ms)</label>
         <input type="range" id="minLength" min="1000" max="15000" value="5000" step="100">
         <div class="param-value" id="minLengthVal">5000 ms</div>
+        <div class="param-hint">Minimum distance between two cut points. Prevents cutting too often.</div>
       </div>
       <div class="param-group">
-        <label>Min Interval (ms)</label>
+        <label>Min Silence Interval (ms)</label>
         <input type="range" id="minInterval" min="100" max="2000" value="500" step="50">
         <div class="param-value" id="minIntervalVal">500 ms</div>
+        <div class="param-hint">Silence must last this long to trigger a cut. Short pauses are ignored.</div>
+      </div>
+      <div class="param-group">
+        <label>Min Duration (s)</label>
+        <input type="range" id="minDuration" min="0" max="30" value="10" step="1">
+        <div class="param-value" id="minDurationVal">10 s</div>
+        <div class="param-hint">Chunks shorter than this get merged with a neighbor. Set 0 to disable.</div>
       </div>
       <div class="param-group">
         <label>Hop Size (ms)</label>
         <input type="range" id="hopSize" min="5" max="50" value="10" step="1">
         <div class="param-value" id="hopSizeVal">10 ms</div>
+        <div class="param-hint">Analysis step size. Smaller = more precise detection, slower processing.</div>
       </div>
       <div class="param-group">
         <label>Max Silence Kept (ms)</label>
         <input type="range" id="maxSilKept" min="100" max="10000" value="500" step="100">
         <div class="param-value" id="maxSilKeptVal">500 ms</div>
+        <div class="param-hint">How much silence to keep at chunk edges. Avoids hard cuts on words.</div>
       </div>
     </div>
+
+    <div class="toggle-row">
+      <div class="toggle-label">
+        <span class="toggle-label-main">Stereo Voice Balance</span>
+        <span class="toggle-label-sub">center voice equally on L+R channels</span>
+      </div>
+      <label class="toggle-switch">
+        <input type="checkbox" id="stereoBalance" checked>
+        <span class="toggle-track"></span>
+      </label>
+    </div>
+
     <div class="actions">
       <button class="btn btn-primary" id="sliceBtn" disabled>✂ Slice Audio</button>
     </div>
   </div>
 
-  <!-- Processing -->
   <div class="card hidden" id="processingCard">
     <div class="processing active">
       <div class="spinner"></div>
@@ -518,10 +656,19 @@
     </div>
   </div>
 
-  <!-- Results -->
   <div class="card hidden" id="resultsCard">
     <div class="card-title">Results</div>
     <div class="stats-bar" id="statsBar"></div>
+
+    <div class="selection-toolbar" id="selectionToolbar">
+      <span class="selection-info" id="selectionInfo">0 selected</span>
+      <div class="selection-actions">
+        <button class="sel-btn sel-btn-all" id="selectAllBtn">Select All</button>
+        <button class="sel-btn sel-btn-cancel" id="deselectBtn">Cancel</button>
+        <button class="sel-btn sel-btn-delete" id="deleteSelectedBtn">🗑 Delete</button>
+      </div>
+    </div>
+
     <div class="chunks-list" id="chunksList"></div>
     <div class="actions download-all">
       <button class="btn btn-secondary" id="downloadAllBtn">⬇ Download All (.wav)</button>
@@ -534,38 +681,46 @@
 let audioBuffer = null;
 let audioCtx = null;
 let chunks = [];
+let selectedChunks = new Set();
 let playingSource = null;
 let playingIdx = -1;
 
 // ── DOM ──
-const dropzone = document.getElementById('dropzone');
-const fileInput = document.getElementById('fileInput');
-const fileInfo = document.getElementById('fileInfo');
-const fileName = document.getElementById('fileName');
-const fileMeta = document.getElementById('fileMeta');
-const fileRemove = document.getElementById('fileRemove');
-const sliceBtn = document.getElementById('sliceBtn');
-const processingCard = document.getElementById('processingCard');
-const resultsCard = document.getElementById('resultsCard');
-const chunksList = document.getElementById('chunksList');
-const statsBar = document.getElementById('statsBar');
-const waveformCanvas = document.getElementById('waveformCanvas');
-const waveformPlaceholder = document.getElementById('waveformPlaceholder');
-const downloadAllBtn = document.getElementById('downloadAllBtn');
+const $ = id => document.getElementById(id);
+const dropzone = $('dropzone');
+const fileInput = $('fileInput');
+const fileInfo = $('fileInfo');
+const fileName = $('fileName');
+const fileMeta = $('fileMeta');
+const fileRemove = $('fileRemove');
+const sliceBtn = $('sliceBtn');
+const processingCard = $('processingCard');
+const resultsCard = $('resultsCard');
+const chunksList = $('chunksList');
+const statsBar = $('statsBar');
+const waveformCanvas = $('waveformCanvas');
+const waveformPlaceholder = $('waveformPlaceholder');
+const downloadAllBtn = $('downloadAllBtn');
+const stereoBalanceToggle = $('stereoBalance');
+const selectionToolbar = $('selectionToolbar');
+const selectionInfo = $('selectionInfo');
+const selectAllBtn = $('selectAllBtn');
+const deselectBtn = $('deselectBtn');
+const deleteSelectedBtn = $('deleteSelectedBtn');
 
-// Params
 const params = {
-  threshold: document.getElementById('threshold'),
-  minLength: document.getElementById('minLength'),
-  minInterval: document.getElementById('minInterval'),
-  hopSize: document.getElementById('hopSize'),
-  maxSilKept: document.getElementById('maxSilKept'),
+  threshold: $('threshold'),
+  minLength: $('minLength'),
+  minInterval: $('minInterval'),
+  minDuration: $('minDuration'),
+  hopSize: $('hopSize'),
+  maxSilKept: $('maxSilKept'),
 };
 
 Object.entries(params).forEach(([key, el]) => {
-  const valEl = document.getElementById(key + 'Val');
+  const valEl = $(key + 'Val');
   el.addEventListener('input', () => {
-    const unit = key === 'threshold' ? ' dB' : ' ms';
+    const unit = key === 'threshold' ? ' dB' : key === 'minDuration' ? ' s' : ' ms';
     valEl.textContent = el.value + unit;
   });
 });
@@ -588,15 +743,13 @@ async function loadFile(file) {
     const arrayBuf = await file.arrayBuffer();
     audioBuffer = await audioCtx.decodeAudioData(arrayBuf);
     fileName.textContent = file.name;
-    const dur = audioBuffer.duration;
-    const ch = audioBuffer.numberOfChannels;
-    const sr = audioBuffer.sampleRate;
-    fileMeta.textContent = `${ch}ch · ${sr}Hz · ${formatTime(dur)}`;
+    fileMeta.textContent = `${audioBuffer.numberOfChannels}ch · ${audioBuffer.sampleRate}Hz · ${formatTime(audioBuffer.duration)}`;
     dropzone.classList.add('hidden');
     fileInfo.classList.remove('hidden');
     sliceBtn.disabled = false;
     resultsCard.classList.add('hidden');
     chunks = [];
+    selectedChunks.clear();
     drawWaveform();
   } catch (err) {
     alert('Could not decode audio: ' + err.message);
@@ -606,17 +759,17 @@ async function loadFile(file) {
 function resetFile() {
   audioBuffer = null;
   chunks = [];
+  selectedChunks.clear();
   fileInput.value = '';
   dropzone.classList.remove('hidden');
   fileInfo.classList.add('hidden');
   sliceBtn.disabled = true;
   resultsCard.classList.add('hidden');
   waveformPlaceholder.classList.remove('hidden');
-  const ctx = waveformCanvas.getContext('2d');
-  ctx.clearRect(0, 0, waveformCanvas.width, waveformCanvas.height);
+  waveformCanvas.getContext('2d').clearRect(0, 0, waveformCanvas.width, waveformCanvas.height);
 }
 
-// ── Waveform drawing ──
+// ── Waveform ──
 function drawWaveform() {
   if (!audioBuffer) return;
   waveformPlaceholder.classList.add('hidden');
@@ -628,60 +781,48 @@ function drawWaveform() {
   const ctx = canvas.getContext('2d');
   ctx.scale(dpr, dpr);
   const w = rect.width, h = rect.height;
-
   const data = audioBuffer.getChannelData(0);
   const step = Math.ceil(data.length / w);
   ctx.clearRect(0, 0, w, h);
-
-  const gradient = ctx.createLinearGradient(0, 0, w, 0);
-  gradient.addColorStop(0, '#3d5afe');
-  gradient.addColorStop(0.5, '#7c4dff');
-  gradient.addColorStop(1, '#3d5afe');
-  ctx.fillStyle = gradient;
-
+  const grad = ctx.createLinearGradient(0, 0, w, 0);
+  grad.addColorStop(0, '#3d5afe');
+  grad.addColorStop(0.5, '#7c4dff');
+  grad.addColorStop(1, '#3d5afe');
+  ctx.fillStyle = grad;
   for (let i = 0; i < w; i++) {
-    let min = 1, max = -1;
+    let mn = 1, mx = -1;
     for (let j = 0; j < step; j++) {
       const d = data[i * step + j] || 0;
-      if (d < min) min = d;
-      if (d > max) max = d;
+      if (d < mn) mn = d;
+      if (d > mx) mx = d;
     }
-    const top = (1 - max) * h / 2;
-    const bottom = (1 - min) * h / 2;
-    ctx.fillRect(i, top, 1, bottom - top);
+    ctx.fillRect(i, (1 - mx) * h / 2, 1, ((1 - mn) - (1 - mx)) * h / 2);
   }
 }
-
 window.addEventListener('resize', drawWaveform);
 
-// ── RMS (ported from Python) ──
+// ── RMS ──
 function getRMS(samples, frameLength, hopLength) {
   const padSize = Math.floor(frameLength / 2);
   const padded = new Float32Array(samples.length + padSize * 2);
   padded.set(samples, padSize);
-
   const numFrames = Math.ceil((padded.length - frameLength) / hopLength) + 1;
   const rms = new Float32Array(numFrames);
-
   for (let i = 0; i < numFrames; i++) {
     const start = i * hopLength;
     let sum = 0;
     const end = Math.min(start + frameLength, padded.length);
     const len = end - start;
-    for (let j = start; j < end; j++) {
-      sum += padded[j] * padded[j];
-    }
+    for (let j = start; j < end; j++) sum += padded[j] * padded[j];
     rms[i] = Math.sqrt(sum / len);
   }
   return rms;
 }
 
-// ── Slicer (ported from Python) ──
+// ── Slicer ──
 function sliceAudio(buffer, thresholdDb, minLengthMs, minIntervalMs, hopSizeMs, maxSilKeptMs) {
   const sr = buffer.sampleRate;
   const numChannels = buffer.numberOfChannels;
-
-  // Get mono samples for analysis
   let samples;
   if (numChannels > 1) {
     samples = new Float32Array(buffer.length);
@@ -707,7 +848,6 @@ function sliceAudio(buffer, thresholdDb, minLengthMs, minIntervalMs, hopSizeMs, 
   }
 
   const rmsList = getRMS(samples, winSize, hopSize);
-
   const silTags = [];
   let silenceStart = null;
   let clipStart = 0;
@@ -722,46 +862,27 @@ function sliceAudio(buffer, thresholdDb, minLengthMs, minIntervalMs, hopSizeMs, 
     const isLeadingSilence = silenceStart === 0 && i > maxSilKept;
     const needSliceMiddle = (i - silenceStart >= minInterval) && (i - clipStart >= minLength);
 
-    if (!isLeadingSilence && !needSliceMiddle) {
-      silenceStart = null;
-      continue;
-    }
+    if (!isLeadingSilence && !needSliceMiddle) { silenceStart = null; continue; }
 
     if (i - silenceStart <= maxSilKept) {
       const pos = argmin(rmsList, silenceStart, i + 1) + silenceStart;
-      if (silenceStart === 0) {
-        silTags.push([0, pos]);
-      } else {
-        silTags.push([pos, pos]);
-      }
+      silTags.push(silenceStart === 0 ? [0, pos] : [pos, pos]);
       clipStart = pos;
     } else if (i - silenceStart <= maxSilKept * 2) {
-      const searchStart = i - maxSilKept;
-      const searchEnd = silenceStart + maxSilKept + 1;
-      const pos = argmin(rmsList, searchStart, searchEnd) + searchStart;
+      const pos = argmin(rmsList, i - maxSilKept, silenceStart + maxSilKept + 1) + (i - maxSilKept);
       const posL = argmin(rmsList, silenceStart, silenceStart + maxSilKept + 1) + silenceStart;
       const posR = argmin(rmsList, i - maxSilKept, i + 1) + (i - maxSilKept);
-      if (silenceStart === 0) {
-        silTags.push([0, posR]);
-        clipStart = posR;
-      } else {
-        silTags.push([Math.min(posL, pos), Math.max(posR, pos)]);
-        clipStart = Math.max(posR, pos);
-      }
+      if (silenceStart === 0) { silTags.push([0, posR]); clipStart = posR; }
+      else { silTags.push([Math.min(posL, pos), Math.max(posR, pos)]); clipStart = Math.max(posR, pos); }
     } else {
       const posL = argmin(rmsList, silenceStart, silenceStart + maxSilKept + 1) + silenceStart;
       const posR = argmin(rmsList, i - maxSilKept, i + 1) + (i - maxSilKept);
-      if (silenceStart === 0) {
-        silTags.push([0, posR]);
-      } else {
-        silTags.push([posL, posR]);
-      }
+      silTags.push(silenceStart === 0 ? [0, posR] : [posL, posR]);
       clipStart = posR;
     }
     silenceStart = null;
   }
 
-  // Trailing silence
   const totalFrames = rmsList.length;
   if (silenceStart !== null && totalFrames - silenceStart >= minInterval) {
     const silenceEnd = Math.min(totalFrames, silenceStart + maxSilKept);
@@ -772,26 +893,20 @@ function sliceAudio(buffer, thresholdDb, minLengthMs, minIntervalMs, hopSizeMs, 
   if (silTags.length === 0) return [extractChunk(buffer, 0, buffer.length)];
 
   const result = [];
-  if (silTags[0][0] > 0) {
-    result.push(extractChunk(buffer, 0, silTags[0][0] * hopSize));
-  }
+  if (silTags[0][0] > 0) result.push(extractChunk(buffer, 0, silTags[0][0] * hopSize));
   for (let i = 0; i < silTags.length - 1; i++) {
-    const start = silTags[i][1] * hopSize;
-    const end = silTags[i + 1][0] * hopSize;
-    if (end > start) result.push(extractChunk(buffer, start, end));
+    const s = silTags[i][1] * hopSize, e = silTags[i + 1][0] * hopSize;
+    if (e > s) result.push(extractChunk(buffer, s, e));
   }
-  if (silTags[silTags.length - 1][1] < totalFrames) {
+  if (silTags[silTags.length - 1][1] < totalFrames)
     result.push(extractChunk(buffer, silTags[silTags.length - 1][1] * hopSize, buffer.length));
-  }
   return result;
 }
 
 function argmin(arr, start, end) {
   let minVal = Infinity, minIdx = 0;
   const e = Math.min(end, arr.length);
-  for (let i = start; i < e; i++) {
-    if (arr[i] < minVal) { minVal = arr[i]; minIdx = i - start; }
-  }
+  for (let i = start; i < e; i++) { if (arr[i] < minVal) { minVal = arr[i]; minIdx = i - start; } }
   return minIdx;
 }
 
@@ -800,8 +915,8 @@ function extractChunk(buffer, startSample, endSample) {
   const e = Math.min(buffer.length, endSample);
   const len = e - s;
   if (len <= 0) return null;
-  const offlineCtx = new OfflineAudioContext(buffer.numberOfChannels, len, buffer.sampleRate);
-  const newBuf = offlineCtx.createBuffer(buffer.numberOfChannels, len, buffer.sampleRate);
+  const offCtx = new OfflineAudioContext(buffer.numberOfChannels, len, buffer.sampleRate);
+  const newBuf = offCtx.createBuffer(buffer.numberOfChannels, len, buffer.sampleRate);
   for (let ch = 0; ch < buffer.numberOfChannels; ch++) {
     const src = buffer.getChannelData(ch);
     const dst = newBuf.getChannelData(ch);
@@ -810,169 +925,237 @@ function extractChunk(buffer, startSample, endSample) {
   return newBuf;
 }
 
+// ── Stereo voice balance: mix to mono → duplicate to L+R ──
+function makeStereoBalanced(buf) {
+  const sr = buf.sampleRate;
+  const len = buf.length;
+  const offCtx = new OfflineAudioContext(2, len, sr);
+  const stereoBuf = offCtx.createBuffer(2, len, sr);
+  const mono = new Float32Array(len);
+  const numCh = buf.numberOfChannels;
+  for (let ch = 0; ch < numCh; ch++) {
+    const src = buf.getChannelData(ch);
+    for (let i = 0; i < len; i++) mono[i] += src[i];
+  }
+  if (numCh > 1) for (let i = 0; i < len; i++) mono[i] /= numCh;
+  stereoBuf.getChannelData(0).set(mono);
+  stereoBuf.getChannelData(1).set(mono);
+  return stereoBuf;
+}
+
+// ── Merge short chunks with neighbors ──
+function mergeShortChunks(chunkList, minDurSec) {
+  if (minDurSec <= 0 || chunkList.length <= 1) return chunkList;
+  const sr = chunkList[0].sampleRate;
+  const numCh = chunkList[0].numberOfChannels;
+  const minSamples = Math.round(minDurSec * sr);
+
+  // Group chunks: merge short ones into their nearest neighbor
+  let merged = [...chunkList];
+  let changed = true;
+  while (changed) {
+    changed = false;
+    for (let i = 0; i < merged.length; i++) {
+      if (merged[i].length >= minSamples) continue;
+      // Find best neighbor to merge with (prefer shorter neighbor to keep things balanced)
+      let mergeIdx = -1;
+      if (i === 0 && merged.length > 1) mergeIdx = 1;
+      else if (i === merged.length - 1) mergeIdx = i - 1;
+      else {
+        // Merge with whichever neighbor is shorter
+        mergeIdx = merged[i - 1].length <= merged[i + 1].length ? i - 1 : i + 1;
+      }
+      if (mergeIdx < 0) break;
+      const a = Math.min(i, mergeIdx), b = Math.max(i, mergeIdx);
+      const bufA = merged[a], bufB = merged[b];
+      const totalLen = bufA.length + bufB.length;
+      const offCtx = new OfflineAudioContext(numCh, totalLen, sr);
+      const newBuf = offCtx.createBuffer(numCh, totalLen, sr);
+      for (let ch = 0; ch < numCh; ch++) {
+        const dst = newBuf.getChannelData(ch);
+        const srcA = bufA.getChannelData(ch);
+        const srcB = bufB.getChannelData(ch);
+        dst.set(srcA, 0);
+        dst.set(srcB, srcA.length);
+      }
+      merged.splice(a, 2, newBuf);
+      changed = true;
+      break; // restart loop after mutation
+    }
+  }
+  return merged;
+}
+
 // ── Slice button ──
 sliceBtn.addEventListener('click', () => {
   if (!audioBuffer) return;
   stopPlaying();
+  selectedChunks.clear();
   processingCard.classList.remove('hidden');
   resultsCard.classList.add('hidden');
 
-  requestAnimationFrame(() => {
-    setTimeout(() => {
-      const t = parseFloat(params.threshold.value);
-      const ml = parseFloat(params.minLength.value);
-      const mi = parseFloat(params.minInterval.value);
-      const hs = parseFloat(params.hopSize.value);
-      const ms = parseFloat(params.maxSilKept.value);
+  requestAnimationFrame(() => setTimeout(() => {
+    const t = +params.threshold.value;
+    const ml = +params.minLength.value;
+    const mi = +params.minInterval.value;
+    const hs = +params.hopSize.value;
+    const ms = +params.maxSilKept.value;
+    const md = +params.minDuration.value;
 
-      chunks = sliceAudio(audioBuffer, t, ml, mi, hs, ms).filter(Boolean);
-      processingCard.classList.add('hidden');
-      renderResults();
-    }, 50);
+    let raw = sliceAudio(audioBuffer, t, ml, mi, hs, ms).filter(Boolean);
+    if (stereoBalanceToggle.checked) raw = raw.map(makeStereoBalanced);
+    raw = mergeShortChunks(raw, md);
+    chunks = raw;
+    processingCard.classList.add('hidden');
+    renderResults();
+  }, 50));
+});
+
+// ── Selection ──
+function toggleSel(idx) {
+  selectedChunks.has(idx) ? selectedChunks.delete(idx) : selectedChunks.add(idx);
+  updateSelUI();
+}
+
+function updateSelUI() {
+  selectionToolbar.classList.toggle('active', selectedChunks.size > 0);
+  selectionInfo.textContent = `${selectedChunks.size} selected`;
+  document.querySelectorAll('.chunk-item').forEach((item, i) => {
+    item.classList.toggle('selected', selectedChunks.has(i));
   });
+}
+
+selectAllBtn.addEventListener('click', () => {
+  for (let i = 0; i < chunks.length; i++) selectedChunks.add(i);
+  updateSelUI();
+});
+
+deselectBtn.addEventListener('click', () => { selectedChunks.clear(); updateSelUI(); });
+
+deleteSelectedBtn.addEventListener('click', () => {
+  if (selectedChunks.size === 0) return;
+  stopPlaying();
+  [...selectedChunks].sort((a, b) => b - a).forEach(idx => chunks.splice(idx, 1));
+  selectedChunks.clear();
+  renderResults();
 });
 
 // ── Render results ──
 function renderResults() {
   resultsCard.classList.remove('hidden');
+  if (chunks.length === 0) {
+    statsBar.innerHTML = '';
+    chunksList.innerHTML = '<div class="empty-msg">All chunks deleted. Re-slice to start over.</div>';
+    selectionToolbar.classList.remove('active');
+    downloadAllBtn.classList.add('hidden');
+    return;
+  }
+  downloadAllBtn.classList.remove('hidden');
+
   const totalDur = chunks.reduce((s, c) => s + c.duration, 0);
+  const isStereo = chunks[0].numberOfChannels === 2;
   statsBar.innerHTML = `
     <div class="stat"><div class="stat-label">Chunks</div><div class="stat-value accent">${chunks.length}</div></div>
-    <div class="stat"><div class="stat-label">Total Duration</div><div class="stat-value green">${formatTime(totalDur)}</div></div>
-    <div class="stat"><div class="stat-label">Sample Rate</div><div class="stat-value">${audioBuffer.sampleRate} Hz</div></div>
+    <div class="stat"><div class="stat-label">Total</div><div class="stat-value green">${formatTime(totalDur)}</div></div>
+    <div class="stat"><div class="stat-label">Output</div><div class="stat-value">${isStereo ? 'Stereo' : 'Mono'} · ${chunks[0].sampleRate} Hz</div></div>
   `;
 
   chunksList.innerHTML = '';
   chunks.forEach((chunk, i) => {
     const item = document.createElement('div');
     item.className = 'chunk-item';
-
     const miniCanvas = document.createElement('canvas');
-    miniCanvas.width = 300;
-    miniCanvas.height = 32;
-
+    miniCanvas.width = 300; miniCanvas.height = 32;
+    const st = chunk.numberOfChannels === 2;
     item.innerHTML = `
-      <div class="chunk-num">#${(i + 1).toString().padStart(2, '0')}</div>
+      <div class="chunk-check" data-idx="${i}">✓</div>
+      <div class="chunk-num">#${String(i + 1).padStart(2, '0')}</div>
       <div class="chunk-bar"></div>
+      ${st ? '<div class="chunk-badge">ST</div>' : ''}
       <div class="chunk-dur">${formatTime(chunk.duration)}</div>
       <button class="chunk-play" data-idx="${i}" title="Play">▶</button>
       <button class="chunk-dl" data-idx="${i}" title="Download">⬇</button>
     `;
-
-    const bar = item.querySelector('.chunk-bar');
-    bar.appendChild(miniCanvas);
-    drawMiniWaveform(miniCanvas, chunk);
-
+    item.querySelector('.chunk-bar').appendChild(miniCanvas);
+    drawMiniWave(miniCanvas, chunk);
     chunksList.appendChild(item);
   });
-
-  // Event delegation
-  chunksList.addEventListener('click', e => {
-    const playBtn = e.target.closest('.chunk-play');
-    const dlBtn = e.target.closest('.chunk-dl');
-    if (playBtn) togglePlay(parseInt(playBtn.dataset.idx));
-    if (dlBtn) downloadChunk(parseInt(dlBtn.dataset.idx));
-  });
+  updateSelUI();
 }
 
-function drawMiniWaveform(canvas, buffer) {
+chunksList.addEventListener('click', e => {
+  const play = e.target.closest('.chunk-play');
+  const dl = e.target.closest('.chunk-dl');
+  const chk = e.target.closest('.chunk-check');
+  if (play) togglePlay(+play.dataset.idx);
+  else if (dl) downloadChunk(+dl.dataset.idx);
+  else if (chk) toggleSel(+chk.dataset.idx);
+});
+
+function drawMiniWave(canvas, buffer) {
   const ctx = canvas.getContext('2d');
   const data = buffer.getChannelData(0);
   const w = canvas.width, h = canvas.height;
   const step = Math.ceil(data.length / w);
   ctx.fillStyle = '#3d5afe88';
   for (let i = 0; i < w; i++) {
-    let max = 0;
-    for (let j = 0; j < step; j++) {
-      const v = Math.abs(data[i * step + j] || 0);
-      if (v > max) max = v;
-    }
-    const barH = max * h;
-    ctx.fillRect(i, (h - barH) / 2, 1, barH);
+    let mx = 0;
+    for (let j = 0; j < step; j++) { const v = Math.abs(data[i * step + j] || 0); if (v > mx) mx = v; }
+    const bh = mx * h;
+    ctx.fillRect(i, (h - bh) / 2, 1, bh);
   }
 }
 
 // ── Playback ──
 function togglePlay(idx) {
-  if (playingIdx === idx) {
-    stopPlaying();
-    return;
-  }
+  if (playingIdx === idx) { stopPlaying(); return; }
   stopPlaying();
   const chunk = chunks[idx];
   if (!chunk) return;
-  const source = audioCtx.createBufferSource();
-  source.buffer = chunk;
-  source.connect(audioCtx.destination);
-  source.onended = () => {
-    if (playingIdx === idx) stopPlaying();
-  };
-  source.start();
-  playingSource = source;
+  const src = audioCtx.createBufferSource();
+  src.buffer = chunk;
+  src.connect(audioCtx.destination);
+  src.onended = () => { if (playingIdx === idx) stopPlaying(); };
+  src.start();
+  playingSource = src;
   playingIdx = idx;
-  updatePlayButtons();
+  updatePlayBtns();
 }
 
 function stopPlaying() {
-  if (playingSource) {
-    try { playingSource.stop(); } catch (e) {}
-    playingSource = null;
-  }
+  if (playingSource) { try { playingSource.stop(); } catch(e){} playingSource = null; }
   playingIdx = -1;
-  updatePlayButtons();
+  updatePlayBtns();
 }
 
-function updatePlayButtons() {
+function updatePlayBtns() {
   document.querySelectorAll('.chunk-play').forEach(btn => {
-    const idx = parseInt(btn.dataset.idx);
-    if (idx === playingIdx) {
-      btn.classList.add('playing');
-      btn.textContent = '⏸';
-    } else {
-      btn.classList.remove('playing');
-      btn.textContent = '▶';
-    }
+    const idx = +btn.dataset.idx;
+    btn.classList.toggle('playing', idx === playingIdx);
+    btn.textContent = idx === playingIdx ? '⏸' : '▶';
   });
 }
 
-// ── Download ──
+// ── WAV export ──
 function audioBufferToWav(buffer) {
-  const numCh = buffer.numberOfChannels;
-  const sr = buffer.sampleRate;
-  const len = buffer.length;
-  const bytesPerSample = 2;
-  const blockAlign = numCh * bytesPerSample;
-  const dataSize = len * blockAlign;
-  const bufferSize = 44 + dataSize;
-  const ab = new ArrayBuffer(bufferSize);
-  const view = new DataView(ab);
-
-  const writeString = (offset, str) => { for (let i = 0; i < str.length; i++) view.setUint8(offset + i, str.charCodeAt(i)); };
-
-  writeString(0, 'RIFF');
-  view.setUint32(4, bufferSize - 8, true);
-  writeString(8, 'WAVE');
-  writeString(12, 'fmt ');
-  view.setUint32(16, 16, true);
-  view.setUint16(20, 1, true);
-  view.setUint16(22, numCh, true);
-  view.setUint32(24, sr, true);
-  view.setUint32(28, sr * blockAlign, true);
-  view.setUint16(32, blockAlign, true);
-  view.setUint16(34, 16, true);
-  writeString(36, 'data');
-  view.setUint32(40, dataSize, true);
-
-  let offset = 44;
-  const channels = [];
-  for (let ch = 0; ch < numCh; ch++) channels.push(buffer.getChannelData(ch));
-
+  const numCh = buffer.numberOfChannels, sr = buffer.sampleRate, len = buffer.length;
+  const bps = 2, blockAlign = numCh * bps, dataSize = len * blockAlign;
+  const ab = new ArrayBuffer(44 + dataSize);
+  const v = new DataView(ab);
+  const ws = (o, s) => { for (let i = 0; i < s.length; i++) v.setUint8(o + i, s.charCodeAt(i)); };
+  ws(0,'RIFF'); v.setUint32(4, 36 + dataSize, true); ws(8,'WAVE'); ws(12,'fmt ');
+  v.setUint32(16, 16, true); v.setUint16(20, 1, true); v.setUint16(22, numCh, true);
+  v.setUint32(24, sr, true); v.setUint32(28, sr * blockAlign, true);
+  v.setUint16(32, blockAlign, true); v.setUint16(34, 16, true);
+  ws(36,'data'); v.setUint32(40, dataSize, true);
+  let off = 44;
+  const chs = [];
+  for (let c = 0; c < numCh; c++) chs.push(buffer.getChannelData(c));
   for (let i = 0; i < len; i++) {
-    for (let ch = 0; ch < numCh; ch++) {
-      let sample = channels[ch][i];
-      sample = Math.max(-1, Math.min(1, sample));
-      view.setInt16(offset, sample < 0 ? sample * 0x8000 : sample * 0x7FFF, true);
-      offset += 2;
+    for (let c = 0; c < numCh; c++) {
+      let s = Math.max(-1, Math.min(1, chs[c][i]));
+      v.setInt16(off, s < 0 ? s * 0x8000 : s * 0x7FFF, true);
+      off += 2;
     }
   }
   return new Blob([ab], { type: 'audio/wav' });
@@ -984,20 +1167,14 @@ function downloadChunk(idx) {
   const blob = audioBufferToWav(chunk);
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
-  a.href = url;
-  a.download = `split_${idx}.wav`;
-  a.click();
+  a.href = url; a.download = `split_${idx}.wav`; a.click();
   URL.revokeObjectURL(url);
 }
 
-downloadAllBtn.addEventListener('click', () => {
-  chunks.forEach((_, i) => downloadChunk(i));
-});
+downloadAllBtn.addEventListener('click', () => chunks.forEach((_, i) => downloadChunk(i)));
 
-// ── Util ──
 function formatTime(sec) {
-  const m = Math.floor(sec / 60);
-  const s = (sec % 60).toFixed(1);
+  const m = Math.floor(sec / 60), s = (sec % 60).toFixed(1);
   return m > 0 ? `${m}m ${s}s` : `${s}s`;
 }
 </script>
