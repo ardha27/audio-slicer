@@ -671,11 +671,12 @@
 
     <div class="chunks-list" id="chunksList"></div>
     <div class="actions download-all">
-      <button class="btn btn-secondary" id="downloadAllBtn">⬇ Download All (.wav)</button>
+      <button class="btn btn-primary" id="downloadZipBtn">⬇ Download All (.zip)</button>
     </div>
   </div>
 </div>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <script>
 // ── State ──
 let audioBuffer = null;
@@ -700,7 +701,7 @@ const chunksList = $('chunksList');
 const statsBar = $('statsBar');
 const waveformCanvas = $('waveformCanvas');
 const waveformPlaceholder = $('waveformPlaceholder');
-const downloadAllBtn = $('downloadAllBtn');
+const downloadZipBtn = $('downloadZipBtn');
 const stereoBalanceToggle = $('stereoBalance');
 const selectionToolbar = $('selectionToolbar');
 const selectionInfo = $('selectionInfo');
@@ -1047,10 +1048,10 @@ function renderResults() {
     statsBar.innerHTML = '';
     chunksList.innerHTML = '<div class="empty-msg">All chunks deleted. Re-slice to start over.</div>';
     selectionToolbar.classList.remove('active');
-    downloadAllBtn.classList.add('hidden');
+    downloadZipBtn.classList.add('hidden');
     return;
   }
-  downloadAllBtn.classList.remove('hidden');
+  downloadZipBtn.classList.remove('hidden');
 
   const totalDur = chunks.reduce((s, c) => s + c.duration, 0);
   const isStereo = chunks[0].numberOfChannels === 2;
@@ -1171,7 +1172,29 @@ function downloadChunk(idx) {
   URL.revokeObjectURL(url);
 }
 
-downloadAllBtn.addEventListener('click', () => chunks.forEach((_, i) => downloadChunk(i)));
+downloadZipBtn.addEventListener('click', async () => {
+  if (chunks.length === 0) return;
+  downloadZipBtn.disabled = true;
+  downloadZipBtn.textContent = '⏳ Zipping...';
+  try {
+    const zip = new JSZip();
+    chunks.forEach((chunk, i) => {
+      const blob = audioBufferToWav(chunk);
+      zip.file(`split_${i}.wav`, blob);
+    });
+    const content = await zip.generateAsync({ type: 'blob', compression: 'DEFLATE', compressionOptions: { level: 6 } });
+    const url = URL.createObjectURL(content);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'audio_slices.zip';
+    a.click();
+    URL.revokeObjectURL(url);
+  } catch (err) {
+    alert('Zip failed: ' + err.message);
+  }
+  downloadZipBtn.disabled = false;
+  downloadZipBtn.textContent = '⬇ Download All (.zip)';
+});
 
 function formatTime(sec) {
   const m = Math.floor(sec / 60), s = (sec % 60).toFixed(1);
