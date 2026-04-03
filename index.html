@@ -644,6 +644,24 @@
       </label>
     </div>
 
+    <div class="toggle-row">
+      <div class="toggle-label">
+        <span class="toggle-label-main">Normalize Audio</span>
+        <span class="toggle-label-sub">boost each chunk to consistent peak volume</span>
+      </div>
+      <label class="toggle-switch">
+        <input type="checkbox" id="normalize" checked>
+        <span class="toggle-track"></span>
+      </label>
+    </div>
+
+    <div id="targetLevelGroup" class="param-group" style="margin-top:12px">
+      <label>Target Peak (dB)</label>
+      <input type="range" id="targetLevel" min="-6" max="0" value="-1" step="0.5">
+      <div class="param-value" id="targetLevelVal">-1.0 dB</div>
+      <div class="param-hint">Peak volume target. -1 dB avoids clipping. 0 dB = maximum possible.</div>
+    </div>
+
     <div class="actions">
       <button class="btn btn-primary" id="sliceBtn" disabled>✂ Slice Audio</button>
     </div>
@@ -703,6 +721,18 @@ const waveformCanvas = $('waveformCanvas');
 const waveformPlaceholder = $('waveformPlaceholder');
 const downloadZipBtn = $('downloadZipBtn');
 const stereoBalanceToggle = $('stereoBalance');
+const normalizeToggle = $('normalize');
+const targetLevelSlider = $('targetLevel');
+const targetLevelGroup = $('targetLevelGroup');
+
+// Show/hide target level based on normalize toggle
+normalizeToggle.addEventListener('change', () => {
+  targetLevelGroup.style.display = normalizeToggle.checked ? '' : 'none';
+});
+
+targetLevelSlider.addEventListener('input', () => {
+  $('targetLevelVal').textContent = parseFloat(targetLevelSlider.value).toFixed(1) + ' dB';
+});
 const selectionToolbar = $('selectionToolbar');
 const selectionInfo = $('selectionInfo');
 const selectAllBtn = $('selectAllBtn');
@@ -987,6 +1017,39 @@ function mergeShortChunks(chunkList, minDurSec) {
   return merged;
 }
 
+// ── Peak normalize: scale all channels so peak hits target dB ──
+function normalizeBuffer(buf, targetDb) {
+  const numCh = buf.numberOfChannels;
+  const len = buf.length;
+  const sr = buf.sampleRate;
+
+  // Find global peak across all channels
+  let peak = 0;
+  for (let ch = 0; ch < numCh; ch++) {
+    const data = buf.getChannelData(ch);
+    for (let i = 0; i < len; i++) {
+      const abs = Math.abs(data[i]);
+      if (abs > peak) peak = abs;
+    }
+  }
+
+  if (peak === 0) return buf; // silent chunk, skip
+
+  const targetLinear = Math.pow(10, targetDb / 20);
+  const gain = targetLinear / peak;
+
+  const offCtx = new OfflineAudioContext(numCh, len, sr);
+  const newBuf = offCtx.createBuffer(numCh, len, sr);
+  for (let ch = 0; ch < numCh; ch++) {
+    const src = buf.getChannelData(ch);
+    const dst = newBuf.getChannelData(ch);
+    for (let i = 0; i < len; i++) {
+      dst[i] = Math.max(-1, Math.min(1, src[i] * gain));
+    }
+  }
+  return newBuf;
+}
+
 // ── Slice button ──
 sliceBtn.addEventListener('click', () => {
   if (!audioBuffer) return;
@@ -1006,6 +1069,10 @@ sliceBtn.addEventListener('click', () => {
     let raw = sliceAudio(audioBuffer, t, ml, mi, hs, ms).filter(Boolean);
     if (stereoBalanceToggle.checked) raw = raw.map(makeStereoBalanced);
     raw = mergeShortChunks(raw, md);
+    if (normalizeToggle.checked) {
+      const targetDb = +targetLevelSlider.value;
+      raw = raw.map(c => normalizeBuffer(c, targetDb));
+    }
     chunks = raw;
     processingCard.classList.add('hidden');
     renderResults();
